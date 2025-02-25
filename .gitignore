@@ -1,7 +1,4 @@
-raylib-linux/
-raylib-win/
-./.clangd
-./src/.clangd
+raylib-5.5/
 *.exe
 *.ilk
 *.pdb
