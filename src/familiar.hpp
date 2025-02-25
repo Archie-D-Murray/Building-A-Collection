@@ -15,7 +15,7 @@ private:
 
     Sprites::SpriteID sprite;
     Vector2 velocity;
-
+    float followRadius = 50;
     int nextTierLevel = 2;
     float attackTimer = 0.0f;
     EntityAnimator animator;
@@ -33,6 +33,7 @@ public:
 
     void Init(FamiliarType type, Tier tier);
     void Update(float dt, const Player& player);
+    void Render(Sprites::RenderData* data);
     void LevelUp(int levelIncrease);
     void Destroy();
 };

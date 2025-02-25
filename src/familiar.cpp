@@ -1,4 +1,7 @@
 #include "familiar.hpp"
+#include "raylib.h"
+#include "player.hpp"
+#include "raymath.h"
 
 void Familiar::Init(FamiliarType type, Tier tier) {
     switch (type) {
@@ -37,4 +40,30 @@ void Familiar::LevelUp(int increase = 1) {
         }
         damage = round(damage * multiplier);
     }
+}
+
+void Familiar::Render(Sprites::RenderData* data) {
+    DrawText(TextFormat("Familiar at: %0.0f, %0.0f", position.x, position.y), 10, 20, 18, WHITE);
+    Color colour;
+    switch (type) {
+    case Fire:
+        colour = RED;
+        break;
+    case Water:
+        colour = BLUE;
+        break;
+    case Earth:
+        colour = BROWN;
+        break;
+    case Lightning:
+        colour = PURPLE;
+        break;
+    }
+
+    DrawCircleV(position, 25.0f, colour);
+}
+
+void Familiar::Update(float dt, const Player& player) {
+    Vector2 followOffset = Vector2ClampValue(player.Velocity() * -1.0f, 0.0f, followRadius * dt);
+    position = Vector2MoveTowards(position, player.position, 50.0f * dt);
 }
