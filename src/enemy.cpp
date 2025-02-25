@@ -1,6 +1,6 @@
 #include "enemy.hpp"
-#include "game.hpp"
+#include "player.hpp"
 
-void Enemy::Init(Game* game) {
-
+bool Enemy::CanFire(const Player& player) {
+    return attackTimer <= 0.0f && Vector2DistanceSqr(player.position, position) <= range * range;
 }

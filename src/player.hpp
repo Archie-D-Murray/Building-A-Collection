@@ -10,6 +10,7 @@ class Player {
     Sprites::SpriteID sprite;
 
 public:
+    float collisionRadius;
     Vector2 position;
     void Init(Game* game);
     void Update(float dt);

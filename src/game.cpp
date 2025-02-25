@@ -2,6 +2,8 @@
 #include "player.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include "normal_enemy.hpp"
+#include "heavy_enemy.hpp"
 
 Game::Game(Vector2 screenSize) :
     screenSize(screenSize),
@@ -26,6 +28,13 @@ void Game::Update(float dt) {
     for (Familiar& familiar : familiars) {
         familiar.Update(dt, player);
         familiar.Render(&renderData);
+    }
+    for (Enemy* enemy : enemies) {
+        enemy->Update(dt, player);
+        if (enemy->CanFire(player)) {
+            enemy->Fire(this);
+        }
+        enemy->Render(&renderData);
     }
 }
 

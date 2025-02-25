@@ -2,6 +2,7 @@
 #include "player.hpp"
 #include "render_data.hpp"
 #include "familiar.hpp"
+#include "enemy.hpp"
 #include <vector>
 
 class Game {
@@ -11,7 +12,7 @@ public:
     Vector2 pixelOffset;
     Player player;
     std::vector<Familiar> familiars;
-    std::vector<Enemy> enemies;
+    std::vector<Enemy*> enemies;
     Game(Vector2 screenSize);
     void Init();
     void Update(float dt);
