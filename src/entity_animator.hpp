@@ -28,4 +28,5 @@ public:
     void SetAnimations(Animation animation, std::initializer_list<Sprites::SpriteID> frames);
     void Update(float dt);
     void Play(Animation animation);
+    Sprites::SpriteID GetSprite();
 };

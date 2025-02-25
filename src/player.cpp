@@ -4,9 +4,8 @@
 
 void Player::Init() {
     position = { 720, 405 };
-    TraceLog(LOG_INFO, "Player is at [ %0.0f, %0.0f]", position.x, position.y);
     velocity = { 0 };
-    speed = 5.0f;
+    speed = 100.0f;
 }
 
 void Player::Update(float dt) {
@@ -16,6 +15,7 @@ void Player::Update(float dt) {
     };
 
     velocity = Vector2Normalize(input) * (speed * dt);
+    position += velocity;
 }
 
 void Player::Render(Sprites::RenderData* data) {

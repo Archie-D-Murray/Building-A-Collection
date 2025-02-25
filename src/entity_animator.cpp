@@ -1,6 +1,4 @@
 #include "entity_animator.hpp"
-#include "raylib.h"
-#include "render_data.hpp"
 #include <vector>
 
 EntityAnimator::EntityAnimator() : 
@@ -29,9 +27,13 @@ void EntityAnimator::Update(float dt) {
     }
 }
 
+Sprites::SpriteID EntityAnimator::GetSprite() {
+    return animations[currentAnimation][currentFrame];
+}
+
 void EntityAnimator::SetAnimations(Animation animation, std::initializer_list<Sprites::SpriteID> frames) {
     animations[animation] = std::vector<Sprites::SpriteID>();
-    for (const Sprites::SpriteID *iter = frames.begin(); iter != frames.end(); iter++) {
+    for (const Sprites::SpriteID* iter = frames.begin(); iter != frames.end(); iter++) {
         animations[animation].push_back(*iter);
     }
 }

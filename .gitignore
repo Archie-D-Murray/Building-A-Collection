@@ -1,2 +1,8 @@
 raylib-linux/
 raylib-win/
+./.clangd
+./src/.clangd
+*.exe
+*.ilk
+*.pdb
+Building-A-Collection
