@@ -1,4 +1,5 @@
 #pragma once
+#include "game_config.hpp"
 #include "player.hpp"
 #include "render_data.hpp"
 #include "familiar.hpp"
@@ -18,6 +19,7 @@ public:
     std::vector<Projectile*> familiarProjectiles;
     Spawner enemySpawner;
     Spawner familiarSpawner;
+    const GameConfig config = CreateConfig();
 
     Game(Vector2 screenSize);
     void Init();

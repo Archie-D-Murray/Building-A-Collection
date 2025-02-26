@@ -3,6 +3,7 @@
 #include "health.hpp"
 #include "raylib.h"
 #include "render_data.hpp"
+#include "game_config.hpp"
 
 class Game;
 class Projectile;

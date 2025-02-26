@@ -2,9 +2,7 @@
 
 #include "entity_animator.hpp"
 #include "render_data.hpp"
-
-enum FamiliarType { Fire, Water, Earth, Lightning };
-enum Tier { Common, Uncommon, Rare, Epic };
+#include "game_config.hpp"
 
 class Player;
 
