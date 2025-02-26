@@ -6,15 +6,16 @@
 #include "projectile.hpp"
 
 
-Player::Player() : effectable(), health(10.0f) { }
+Player::Player(Game* game) : effectable(), health(game->config.playerStats.health) { 
+}
 
 void Player::Init(Game* game) {
+    sprite = Sprites::Player;
     position = { 720, 405 };
     velocity = { 0 };
-    speed = 100.0f;
-    game->familiars.push_back(Familiar(position + Vector2 { 50.0f, 0.0f }, Fire, Common));
-    health = Health(100.0f);
-    health.BindDamageReceiver(dynamic_cast<DamageReciever*>(this));
+    speed = game->config.playerStats.speed;
+    collisionRadius = game->config.playerStats.collisionRadius;
+    game->familiars.push_back(Familiar(position + Vector2 { 50.0f, 0.0f }, Fire, Common, game->config));
     effectable = Effectable();
     effectable.health = &health;
     TraceLog(LOG_INFO, "Added base familiar");
@@ -33,10 +34,6 @@ void Player::Update(float dt) {
     velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
     DrawText(TextFormat("Player speed: %0.0f", dt * speed * effectable.speedModifier), 10, 60, 18, WHITE);
     position += velocity;
-}
-
-void Player::OnDamage(Health* health) {
-    TraceLog(LOG_INFO, "Player was damaged, health: %0.0f!", health->PercentHealth() * 100.0f);
 }
 
 void Player::Render(Sprites::RenderData* data) {

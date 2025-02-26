@@ -7,6 +7,8 @@
 #include "spawner.hpp"
 #include <vector>
 
+GameConfig CreateConfig();
+
 class Game {
     Sprites::RenderData renderData;
 public:
@@ -19,7 +21,8 @@ public:
     std::vector<Projectile*> familiarProjectiles;
     Spawner enemySpawner;
     Spawner familiarSpawner;
-    const GameConfig config = CreateConfig();
+    const GameConfig config;
+    float zoom = 1.0f;
 
     Game(Vector2 screenSize);
     void Init();

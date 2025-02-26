@@ -3,9 +3,8 @@
 
 Health::Health(float maxHealth) : 
     currentHealth(maxHealth),
-    maxHealth(maxHealth),
-    damageReceivers() {
-}
+    maxHealth(maxHealth)
+    { }
 
 void Health::Damage(float amount) {
     if (amount == 0.0f) {
@@ -16,11 +15,4 @@ void Health::Damage(float amount) {
         return;
     }
     currentHealth -= fmax(amount, 0.0f);
-    for (DamageReciever* receiver : damageReceivers) {
-        receiver->OnDamage(this);
-    }
-}
-
-void Health::BindDamageReceiver(DamageReciever* receiver) {
-    damageReceivers.push_back(receiver);
 }

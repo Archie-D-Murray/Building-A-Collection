@@ -26,10 +26,17 @@ public:
     Tier tier = Common;
 
     float damage;
+    float effectMagnitude;
+    float effectDuration;
+    float effectTickRate;
+    float speed;
+    float collisionRadius;
     float attackTime;
+    float attackRange;
+    int arcCount;
 
-    Familiar(Vector2 position, FamiliarType type, Tier tier);
-    void Init(FamiliarType type, Tier tier);
+    Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config);
+    void Init(FamiliarType type, Tier tier, const GameConfig& config);
     void Update(float dt, const Player& player);
     void Render(Sprites::RenderData* data);
     void LevelUp(int levelIncrease);

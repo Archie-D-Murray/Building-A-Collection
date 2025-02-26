@@ -1,28 +1,25 @@
 #include "familiar.hpp"
+#include "game_config.hpp"
 #include "raylib.h"
 #include "player.hpp"
 #include "raymath.h"
 
-Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier) {
-    Init(type, tier);
+Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config) : position(position) {
+    Init(type, tier, config);
 }
 
-void Familiar::Init(FamiliarType type, Tier tier) {
-    switch (type) {
-    case Fire:
-        damage = 10.0f;
-        attackTime = 1.0f;
-    case Water:
-        damage = 2.0f;
-        attackTime = 0.25f;
-    case Earth:
-        damage = 15.0f;
-        attackTime = 2.0f;
-    case Lightning:
-        damage = 7.5f;
-        attackTime = 1.5f;
-      break;
-    }
+void Familiar::Init(FamiliarType type, Tier tier, const GameConfig& config) {
+    this->type = type;
+    this->tier = tier;
+    damage = config.familiarStats[type].damage;
+    effectMagnitude = config.familiarStats[type].effectMagnitude;
+    effectDuration = config.familiarStats[type].effectDuration;
+    effectTickRate = config.familiarStats[type].effectTickRate;
+    speed = config.familiarStats[type].speed;
+    collisionRadius = config.familiarStats[type].collisionRadius;
+    attackTime = config.familiarStats[type].attackTime;
+    attackRange = config.familiarStats[type].attackRange;
+    arcCount = config.familiarStats[type].arcCount;
 }
 
 void Familiar::LevelUp(int increase = 1) {
@@ -41,6 +38,8 @@ void Familiar::LevelUp(int increase = 1) {
         case Epic:
             multiplier = 2.0f;
           break;
+        default:
+            break;
         }
         damage = round(damage * multiplier);
     }

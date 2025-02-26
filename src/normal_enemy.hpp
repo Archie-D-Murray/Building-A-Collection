@@ -2,6 +2,7 @@
 
 class NormalEnemy : public Enemy {
     float followRange = 350.0f;
+    float projectileRadius;
 public:
     NormalEnemy(Game* game, Vector2 position);
     void Init(Game* game) override;

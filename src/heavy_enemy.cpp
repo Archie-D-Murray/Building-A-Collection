@@ -1,17 +1,19 @@
 #include "heavy_enemy.hpp"
 #include "game.hpp"
+#include "game_config.hpp"
 #include "player.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
-HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, 50.0f) {
+HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Heavy].health) {
     type = Heavy;
     effectable.health = &health;
     Init(game);
 }
 
 void HeavyEnemy::Init(Game* game) {
-    
+    speed = game->config.enemyStats[Heavy].speed;
+    collisionRadius = game->config.enemyStats[Heavy].collisionRadius;
 }
 
 void HeavyEnemy::Update(float dt, Player& player) {
