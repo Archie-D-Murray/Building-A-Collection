@@ -4,15 +4,21 @@
 #include "raylib.h"
 #include "raymath.h"
 
+HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, 50.0f) {
+    type = Heavy;
+    effectable.health = &health;
+    Init(game);
+}
+
 void HeavyEnemy::Init(Game* game) {
     
 }
 
-void HeavyEnemy::Update(float dt, const Player& player) {
+void HeavyEnemy::Update(float dt, Player& player) {
     velocity = Vector2ClampValue(targetPos - position, 0.0f, speed * dt);
     position += velocity;
     if (attackTimer <= 0.0f && CheckCollisionCircles(player.position, player.collisionRadius, position, collisionRadius)) {
-        // TODO: Player damage;
+        player.GetHealth().Damage(damage);
         attackTimer += attackTime;
     } else if (attackTimer >= 0.0f) {
         attackTimer -= dt;

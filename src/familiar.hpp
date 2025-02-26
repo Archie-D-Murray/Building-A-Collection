@@ -30,7 +30,7 @@ public:
     float damage;
     float attackTime;
 
-
+    Familiar(Vector2 position, FamiliarType type, Tier tier);
     void Init(FamiliarType type, Tier tier);
     void Update(float dt, const Player& player);
     void Render(Sprites::RenderData* data);

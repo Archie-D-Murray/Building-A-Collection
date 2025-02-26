@@ -3,6 +3,7 @@
 #include "render_data.hpp"
 #include "familiar.hpp"
 #include "enemy.hpp"
+#include "spawner.hpp"
 #include <vector>
 
 class Game {
@@ -13,8 +14,19 @@ public:
     Player player;
     std::vector<Familiar> familiars;
     std::vector<Enemy*> enemies;
+    std::vector<Projectile*> enemyProjectiles;
+    std::vector<Projectile*> familiarProjectiles;
+    Spawner enemySpawner;
+    Spawner familiarSpawner;
+
     Game(Vector2 screenSize);
     void Init();
     void Update(float dt);
     void Shutdown();
+
+private:
+    void ProcessProjectiles(float dt);
+
+    static void SpawnRandomEnemy(Game* game, Vector2 position);
+    static void SpawnRandomFamiliar(Game* game, Vector2 position);
 };

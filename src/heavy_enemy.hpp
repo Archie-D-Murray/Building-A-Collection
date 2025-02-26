@@ -3,10 +3,10 @@
 class HeavyEnemy : public Enemy {
     Vector2 targetPos;
     float targetRange;
-    float collisionRadius;
 public:
+    HeavyEnemy(Game* game, Vector2 position);
     void Init(Game* game) override;
-    void Update(float dt, const Player& player) override;
+    void Update(float dt, Player& player) override;
     void Render(Sprites::RenderData* data) override;
     void Destroy(Game* game) override;
     void Fire(Game* game) override;

@@ -3,6 +3,10 @@
 #include "player.hpp"
 #include "raymath.h"
 
+Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier) {
+    Init(type, tier);
+}
+
 void Familiar::Init(FamiliarType type, Tier tier) {
     switch (type) {
     case Fire:
