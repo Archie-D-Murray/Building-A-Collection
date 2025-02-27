@@ -1,8 +1,17 @@
 #include "familiar.hpp"
+#include "game.hpp"
 #include "game_config.hpp"
+#include "projectile.hpp"
 #include "raylib.h"
 #include "player.hpp"
 #include "raymath.h"
+
+const float DAMAGE_MODIFIERS[TierCount] = {
+    [Common] = 1.0f,
+    [Uncommon] = 1.25f,
+    [Rare] = 1.5f,
+    [Epic] = 2.0f
+};
 
 Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config) : position(position) {
     Init(type, tier, config);
@@ -17,56 +26,84 @@ void Familiar::Init(FamiliarType type, Tier tier, const GameConfig& config) {
     effectTickRate = config.familiarStats[type].effectTickRate;
     speed = config.familiarStats[type].speed;
     collisionRadius = config.familiarStats[type].collisionRadius;
+    projectileRadius = config.familiarStats[type].projectileRadius;
+    projectileSpeed = config.familiarStats[type].projectileSpeed;
     attackTime = config.familiarStats[type].attackTime;
     attackRange = config.familiarStats[type].attackRange;
     arcCount = config.familiarStats[type].arcCount;
+    sprite = config.familiarStats[type].sprite;
 }
 
-void Familiar::LevelUp(int increase = 1) {
+void Familiar::AdvanceTier() {
     if (tier == Epic) { return; }
-    level += increase;
-    while (level >= nextTierLevel && tier != Epic) {
-        nextTierLevel += LEVEL_PER_TIER;
-        float multiplier = 1.0f;
-        switch (tier) {
+    switch (tier) {
         case Common:
-            return;
+            tier = Uncommon;
+            break;
         case Uncommon:
-            multiplier = 1.25f;
+            tier = Rare;
+            break;
         case Rare:
-            multiplier = 1.5f;
-        case Epic:
-            multiplier = 2.0f;
-          break;
+            tier = Epic;
+            break;
         default:
             break;
-        }
-        damage = round(damage * multiplier);
     }
+    damage = roundf(damage * DAMAGE_MODIFIERS[tier + 1]);
+}
+
+void Familiar::DropTier() {
+    switch (tier) {
+        case Uncommon:
+            tier = Common;
+            break;
+        case Rare:
+            tier = Uncommon;
+            break;
+        case Epic:
+            tier = Rare;
+            break;
+        default:
+            break;
+    }
+    damage = roundf(damage / DAMAGE_MODIFIERS[tier]);
 }
 
 void Familiar::Render(Sprites::RenderData* data) {
-    DrawText(TextFormat("Familiar at: %0.0f, %0.0f", position.x, position.y), 10, 20, 18, WHITE);
-    Color colour;
-    switch (type) {
-    case Fire:
-        colour = RED;
-        break;
-    case Water:
-        colour = BLUE;
-        break;
-    case Earth:
-        colour = BROWN;
-        break;
-    case Lightning:
-        colour = PURPLE;
-        break;
-    }
-
-    DrawCircleV(position, 25.0f, colour);
+    data->DrawSprite(sprite, position, 0.0f);
 }
 
 void Familiar::Update(float dt, const Player& player) {
     Vector2 followOffset = Vector2ClampValue(player.Velocity() * -1.0f, 0.0f, followRadius * dt);
     position = Vector2MoveTowards(position, player.position, 50.0f * dt);
+}
+
+Enemy* Familiar::GetTarget(Game* game) {
+    for (Enemy* enemy : game->enemies) {
+        if (!enemy->GetHealth().IsDead() && CheckCollisionCircles(enemy->position, enemy->collisionRadius, position, attackRange)) {
+            return enemy;
+        }
+    }
+    return nullptr;
+}
+
+void Familiar::Attack(Game* game, Enemy* target) {
+    game->familiarProjectiles.push_back(
+        new Projectile(position, Vector2Normalize(target->position - position), projectileSpeed, projectileRadius, damage, game->config.familiarStats[type].projectileSprite));
+    Projectile* projectile = game->familiarProjectiles.back();
+    switch (type) {
+    case Fire:
+        break;
+    case Water:
+        projectile->type = Linear;
+        break;
+    case Earth:
+        projectile->type = AoE;
+    case Lightning:
+        projectile->chainCount = this->arcCount;
+        projectile->type = Chain;
+        break;
+    default:
+        break;
+    }
 }

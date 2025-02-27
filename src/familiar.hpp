@@ -5,6 +5,8 @@
 #include "game_config.hpp"
 
 class Player;
+class Game;
+class Enemy;
 
 class Familiar {
 private:
@@ -31,6 +33,8 @@ public:
     float effectTickRate;
     float speed;
     float collisionRadius;
+    float projectileRadius;
+    float projectileSpeed;
     float attackTime;
     float attackRange;
     int arcCount;
@@ -39,6 +43,9 @@ public:
     void Init(FamiliarType type, Tier tier, const GameConfig& config);
     void Update(float dt, const Player& player);
     void Render(Sprites::RenderData* data);
-    void LevelUp(int levelIncrease);
+    void AdvanceTier();
+    void DropTier();
+    void Attack(Game* game, Enemy* target);
     void Destroy();
+    Enemy* GetTarget(Game* game);
 };

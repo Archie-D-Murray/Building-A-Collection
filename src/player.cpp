@@ -32,7 +32,6 @@ void Player::Update(float dt) {
     };
 
     velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
-    DrawText(TextFormat("Player speed: %0.0f", dt * speed * effectable.speedModifier), 10, 60, 18, WHITE);
     position += velocity;
 }
 

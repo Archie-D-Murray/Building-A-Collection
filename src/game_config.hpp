@@ -1,8 +1,10 @@
 #pragma once
 
+#include "render_data.hpp"
 enum FamiliarType { Fire, Water, Earth, Lightning, FamiliarCount };
 enum Tier { Common, Uncommon, Rare, Epic, TierCount };
 enum EnemyType { Normal, Heavy, EnemyCount };
+enum ProjectileType { Linear, AoE, Chain };
 
 struct PlayerStats {
     float speed;
@@ -17,9 +19,14 @@ struct FamiliarStats {
     float effectTickRate;
     float speed;
     float collisionRadius;
+    float projectileRadius;
+    float projectileSpeed;
     float attackTime;
     float attackRange;
     int arcCount;
+    ProjectileType projectileType;
+    Sprites::SpriteID projectileSprite;
+    Sprites::SpriteID sprite;
 };
 
 struct EnemyStats {

@@ -7,6 +7,7 @@
 #include "raymath.h"
 #include "normal_enemy.hpp"
 #include "heavy_enemy.hpp"
+#include "render_data.hpp"
 
 
 GameConfig CreateConfig() {
@@ -41,9 +42,13 @@ GameConfig CreateConfig() {
                 .effectDuration = 2.0f,
                 .effectTickRate = 0.25f,
                 .speed = 175.0f,
+                .projectileRadius = 80.0f,
+                .projectileSpeed = 125.0f,
                 .attackTime = 1.0f,
                 .attackRange = 160.0f,
                 .arcCount = 0,
+                .projectileSprite = Sprites::FireProjectile,
+                .sprite = Sprites::FireFamiliar,
             },
             [Water] = FamiliarStats {
                 .damage = 10.0f,
@@ -51,9 +56,14 @@ GameConfig CreateConfig() {
                 .effectDuration = 2.0f,
                 .effectTickRate = 0.0f,
                 .speed = 150.0f,
+                .projectileRadius = 80.0f,
+                .projectileSpeed = 125.0f,
                 .attackTime = 0.75f,
                 .attackRange = 180.0f,
                 .arcCount = 0,
+                .projectileType = Linear,
+                .projectileSprite = Sprites::WaterProjectile,
+                .sprite = Sprites::WaterFamiliar,
             },
             [Earth] = FamiliarStats {
                 .damage = 100.0f,
@@ -61,9 +71,14 @@ GameConfig CreateConfig() {
                 .effectDuration = 2.0f,
                 .effectTickRate = 0.0,
                 .speed = 100.0f,
+                .projectileRadius = 314.0f,
+                .projectileSpeed = 100.0f,
                 .attackTime = 3.0f,
                 .attackRange = 200.0f,
                 .arcCount = 0,
+                .projectileType = AoE,
+                .projectileSprite = Sprites::EarthProjectile,
+                .sprite = Sprites::EarthFamiliar,
             },
             [Lightning] = FamiliarStats {
                 .damage = 25.0f,
@@ -71,11 +86,16 @@ GameConfig CreateConfig() {
                 .effectDuration = 0.5f,
                 .effectTickRate = 0.0f,
                 .speed = 125.0f,
+                .projectileRadius = 256.0f,
+                .projectileSpeed = 2000.0f,
                 .attackTime = 2.0f,
                 .attackRange = 100.0f,
                 .arcCount = 3,
+                .projectileType = Chain,
+                .projectileSprite = Sprites::LightningProjectile,
+                .sprite = Sprites::LightningFamiliar,
             },
-        }
+        },
     };
 };
 
@@ -98,7 +118,7 @@ void Game::Init() {
 }
 
 void Game::Update(float dt) {
-    BeginMode2D(Camera2D { .zoom = zoom });
+    BeginMode2D(Camera2D { .zoom = zoom * 4.0f });
     if (!player.GetHealth().IsDead()) {
         player.Update(dt);
         player.Render(&renderData);
@@ -110,6 +130,10 @@ void Game::Update(float dt) {
     }
     for (Familiar& familiar : familiars) {
         familiar.Update(dt, player);
+        Enemy* target = familiar.GetTarget(this);
+        if (target) {
+            familiar.Attack(this, target);
+        }
     }
     for (Enemy* enemy : enemies) {
         enemy->Update(dt, player);
@@ -118,6 +142,17 @@ void Game::Update(float dt) {
         }
     }
     ProcessProjectiles(dt);
+    familiarSpawner.Update(dt, this);
+    enemySpawner.Update(dt, this);
+    for (size_t i = 0; i < enemies.size();) {
+        if (enemies[i]->GetHealth().IsDead()) {
+            enemies[i] = enemies.back();
+            enemies.pop_back();
+        } else {
+            enemies[i]->Render(&renderData);
+            i++;
+        }
+    } 
     for (Familiar& familiar : familiars) {
         familiar.Render(&renderData);
     }
@@ -129,12 +164,16 @@ void Game::Shutdown() {
 }
 
 void Game::ProcessProjectiles(float dt) {
-    familiarSpawner.Update(dt, this);
-    enemySpawner.Update(dt, this);
-
     for (size_t i = 0; i < enemyProjectiles.size();) {
         Projectile* projectile = enemyProjectiles[i];
         if (CheckCollisionCircles(projectile->position, projectile->collisionRadius, player.position, player.collisionRadius)) {
+            if (!familiars.empty()) {
+                if (familiars.back().tier > Tier::Common) {
+                    familiars.pop_back();
+                } else {
+                    familiars.back().DropTier();
+                }
+            }
             player.DoCollision(projectile);
             enemyProjectiles[i] = enemyProjectiles.back();
             enemyProjectiles.pop_back();
@@ -150,16 +189,26 @@ void Game::ProcessProjectiles(float dt) {
     for (size_t i = 0; i < familiarProjectiles.size();) {
         Projectile* projectile = familiarProjectiles[i];
         bool deleted = false;
-        for (size_t enemyIdx = 0; enemyIdx < enemies.size();) {
-            Enemy* enemy = enemies[enemyIdx];
+        int hitCount = 0;
+        int hitMax = 0;
+        switch (projectile->type) {
+        case Linear:
+            hitMax = 1;
+            break;
+        case AoE:
+            hitMax = enemies.size();
+            break;
+        case Chain:
+            hitMax = projectile->chainCount;
+            break;
+        }
+        for (Enemy* enemy : enemies) {
             if (enemy->DoCollision(projectile)) {
-                enemies[enemyIdx] = enemies.back();
-                enemies.pop_back();
                 deleted = true;
+                hitCount++;
+            }
+            if (hitCount >= hitMax) {
                 break;
-            } else {
-                enemy->Render(&renderData);
-                enemyIdx++;
             }
         }
         if (deleted) {

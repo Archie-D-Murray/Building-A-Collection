@@ -35,5 +35,5 @@ public:
     virtual void Fire(Game* game) = 0;
     virtual bool CanFire(const Player& player);
     virtual bool DoCollision(Projectile* projectile);
-    const Health& GetHealth() const { return health; };
+    Health& GetHealth() { return health; };
 };

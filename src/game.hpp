@@ -1,8 +1,8 @@
 #pragma once
+#include "familiar.hpp"
 #include "game_config.hpp"
 #include "player.hpp"
 #include "render_data.hpp"
-#include "familiar.hpp"
 #include "enemy.hpp"
 #include "spawner.hpp"
 #include <vector>
