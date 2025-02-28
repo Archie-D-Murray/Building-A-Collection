@@ -13,14 +13,14 @@ public:
     Projectile(Vector2 position, Vector2 direction, float speed, float collisionRadius, float damage, Sprites::SpriteID);
     Vector2 position;
     Vector2 direction;
-    float angle;
+    float angle = 0.0f;
     float speed;
     float collisionRadius;
     float damage;
     Sprites::SpriteID sprite;
     std::vector<Effect> effects;
-    ProjectileType type;
-    int chainCount;
+    ProjectileType type = Linear;
+    int chainCount = 0;
 
     void Update(float dt);
     void Render(Sprites::RenderData* data);

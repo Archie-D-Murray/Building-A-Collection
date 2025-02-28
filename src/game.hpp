@@ -1,5 +1,6 @@
 #pragma once
 #include "familiar.hpp"
+#include "familiar_egg.hpp"
 #include "game_config.hpp"
 #include "player.hpp"
 #include "render_data.hpp"
@@ -16,13 +17,14 @@ public:
     Vector2 pixelOffset;
     Player player;
     std::vector<Familiar> familiars;
+    std::vector<FamiliarEgg> familiarEggs;
     std::vector<Enemy*> enemies;
     std::vector<Projectile*> enemyProjectiles;
     std::vector<Projectile*> familiarProjectiles;
     Spawner enemySpawner;
     Spawner familiarSpawner;
     const GameConfig config;
-    float zoom = 1.0f;
+    float zoom = 4.0f;
 
     Game(Vector2 screenSize);
     void Init();
@@ -31,7 +33,6 @@ public:
 
 private:
     void ProcessProjectiles(float dt);
-
     static void SpawnRandomEnemy(Game* game, Vector2 position);
     static void SpawnRandomFamiliar(Game* game, Vector2 position);
 };

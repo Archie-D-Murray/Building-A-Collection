@@ -36,6 +36,7 @@ struct EnemyStats {
     float collisionRadius;
     float projectileRadius;
     float speed;
+    Sprites::SpriteID sprite;
 };
 
 struct GameConfig {

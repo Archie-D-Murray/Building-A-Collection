@@ -1,4 +1,5 @@
 #include "enemy.hpp"
+#include "render_data.hpp"
 
 class NormalEnemy : public Enemy {
     float followRange = 350.0f;

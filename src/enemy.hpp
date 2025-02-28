@@ -3,6 +3,7 @@
 #include "effectable.hpp"
 #include "health.hpp"
 #include "raylib.h"
+#include "raymath.h"
 #include "render_data.hpp"
 #include "game_config.hpp"
 

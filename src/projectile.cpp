@@ -8,8 +8,9 @@ Projectile::Projectile(Vector2 position, Vector2 direction, float speed, float c
     direction(direction),
     speed(speed),
     collisionRadius(collisionRadius),
+    sprite(sprite),
     damage(damage) {
-    angle = Vector2Angle({ 0, 1 }, direction);
+    angle = Vector2Angle({ 0, -1.0f }, direction) * RAD2DEG;
 }
 
 void Projectile::Update(float dt) {
@@ -17,7 +18,7 @@ void Projectile::Update(float dt) {
 }
 
 void Projectile::Render(Sprites::RenderData* data) {
-    DrawCircleV(position, 10, ORANGE);
+    data->DrawSprite(sprite, position, angle);
 }
 
 bool Projectile::OffScreen(Game* game) {

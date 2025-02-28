@@ -73,12 +73,18 @@ void Familiar::Render(Sprites::RenderData* data) {
     data->DrawSprite(sprite, position, 0.0f);
 }
 
-void Familiar::Update(float dt, const Player& player) {
-    Vector2 followOffset = Vector2ClampValue(player.Velocity() * -1.0f, 0.0f, followRadius * dt);
-    position = Vector2MoveTowards(position, player.position, 50.0f * dt);
+void Familiar::Update(float dt, const Player& player, float offset) {
+    DrawText(TextFormat("Drawing at %.0f%", offset * 100.0f), 2, 10 + 40 * offset, 2, WHITE);
+    position = player.position + Vector2Rotate({ 0, followRadius}, player.familiarRotation + PI * 2.0f * offset);
+    if (attackTimer >= 0.0f) {
+        attackTimer -= dt;
+    }
 }
 
 Enemy* Familiar::GetTarget(Game* game) {
+    if (attackTimer >= 0.0f) {
+        return nullptr;
+    }
     for (Enemy* enemy : game->enemies) {
         if (!enemy->GetHealth().IsDead() && CheckCollisionCircles(enemy->position, enemy->collisionRadius, position, attackRange)) {
             return enemy;
@@ -88,6 +94,7 @@ Enemy* Familiar::GetTarget(Game* game) {
 }
 
 void Familiar::Attack(Game* game, Enemy* target) {
+    attackTimer += attackTime;
     game->familiarProjectiles.push_back(
         new Projectile(position, Vector2Normalize(target->position - position), projectileSpeed, projectileRadius, damage, game->config.familiarStats[type].projectileSprite));
     Projectile* projectile = game->familiarProjectiles.back();

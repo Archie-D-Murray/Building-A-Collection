@@ -14,6 +14,7 @@ void NormalEnemy::Init(Game* game) {
     collisionRadius = game->config.enemyStats[Normal].collisionRadius;
     projectileRadius = game->config.enemyStats[Normal].projectileRadius;
     damage = game->config.enemyStats[Normal].damage;
+    sprite = game->config.enemyStats[Normal].sprite;
 }
 
 void NormalEnemy::Update(float dt, Player& player) {
@@ -25,11 +26,11 @@ void NormalEnemy::Update(float dt, Player& player) {
 }
 
 void NormalEnemy::Render(Sprites::RenderData* data) {
-    DrawCircleV(position, 40.0f, DARKBLUE);
+    data->DrawSprite(sprite, position);
 }
 
 void NormalEnemy::Fire(Game* game) {
-    game->enemyProjectiles.push_back(new Projectile(position, Vector2Normalize(game->player.position - position), projectileSpeed, projectileRadius, damage, Sprites::Player));
+    game->enemyProjectiles.push_back(new Projectile(position, Vector2Normalize(game->player.position - position), projectileSpeed, projectileRadius, damage, Sprites::EnemyProjectile));
     attackTimer += attackTime;
 }
 

@@ -14,6 +14,7 @@ HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->con
 void HeavyEnemy::Init(Game* game) {
     speed = game->config.enemyStats[Heavy].speed;
     collisionRadius = game->config.enemyStats[Heavy].collisionRadius;
+    sprite = game->config.enemyStats[Heavy].sprite;
 }
 
 void HeavyEnemy::Update(float dt, Player& player) {
@@ -28,7 +29,7 @@ void HeavyEnemy::Update(float dt, Player& player) {
 }
 
 void HeavyEnemy::Render(Sprites::RenderData* data) {
-    DrawCircleV(position, 40.0f, DARKBLUE);
+    data->DrawSprite(sprite, position);
 }
 
 void HeavyEnemy::Fire(Game* game) {

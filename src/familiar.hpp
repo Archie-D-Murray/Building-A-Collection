@@ -41,7 +41,7 @@ public:
 
     Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config);
     void Init(FamiliarType type, Tier tier, const GameConfig& config);
-    void Update(float dt, const Player& player);
+    void Update(float dt, const Player& player, float offset);
     void Render(Sprites::RenderData* data);
     void AdvanceTier();
     void DropTier();
