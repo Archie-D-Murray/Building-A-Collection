@@ -74,7 +74,6 @@ void Familiar::Render(Sprites::RenderData* data) {
 }
 
 void Familiar::Update(float dt, const Player& player, float offset) {
-    DrawText(TextFormat("Drawing at %.0f%", offset * 100.0f), 2, 10 + 40 * offset, 2, WHITE);
     position = player.position + Vector2Rotate({ 0, followRadius}, player.familiarRotation + PI * 2.0f * offset);
     if (attackTimer >= 0.0f) {
         attackTimer -= dt;

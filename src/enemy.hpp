@@ -3,7 +3,6 @@
 #include "effectable.hpp"
 #include "health.hpp"
 #include "raylib.h"
-#include "raymath.h"
 #include "render_data.hpp"
 #include "game_config.hpp"
 
@@ -35,6 +34,6 @@ public:
     virtual void Destroy(Game* game) = 0;
     virtual void Fire(Game* game) = 0;
     virtual bool CanFire(const Player& player);
-    virtual bool DoCollision(Projectile* projectile);
+    virtual bool DoCollision(Game* game, Projectile* projectile);
     Health& GetHealth() { return health; };
 };

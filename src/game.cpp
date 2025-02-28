@@ -104,10 +104,12 @@ GameConfig CreateConfig() {
 Game::Game(Vector2 screenSize) :
     config(CreateConfig()),
     screenSize(screenSize),
+    scale(1080.0f / screenSize.y),
     zoom(4.0f * 1080.0f / screenSize.y),
     player(this),
-    renderData("./atlas.png")
+    renderData("./atlas.png", "./Alagard.ttf")
     {
+    player = Player(this);
     Rectangle spawnArea = { 0, 0, screenSize.x / zoom, screenSize.y / zoom };
     familiarSpawner = Spawner(screenSize * 0.5f / zoom, spawnArea.height * 0.1f, spawnArea.height * 0.45f, 10.0f, Game::SpawnRandomFamiliar);
     enemySpawner = Spawner(screenSize * 0.5f / zoom, spawnArea, 2.5f, Game::SpawnRandomEnemy);
@@ -115,8 +117,22 @@ Game::Game(Vector2 screenSize) :
 
 void Game::Init() {
     player.Init(this);
-    pixelOffset = screenSize * 0.5f;
-    pixelOffset.x *= -1;
+}
+
+void Game::DrawUI() {
+    const Vector2 healthBarScale = { 0.5f, 0.95f };
+    const Color red = { 128, 0, 0, 255 };
+    const float scale = screenSize.x * 0.25f / renderData.GetSource(Sprites::HealthBarBackground).width;
+    Rectangle bar = { 0, 0, 92 * scale * player.GetHealth().PercentHealth(), 2 * scale };
+    bar.x = screenSize.x * healthBarScale.x - bar.width * 0.5f;
+    bar.y = screenSize.y * healthBarScale.y - bar.height * 0.5f;
+    renderData.DrawSpriteSize(Sprites::HealthBarBackground, screenSize * healthBarScale, scale);
+    const float healthBarXOffset = 12 + 3 * Sprites::SPRITE_SIZE;
+    DrawRectangleRec(
+        bar,
+        red
+    );
+    renderData.DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
 }
 
 void Game::Update(float dt) {
@@ -166,7 +182,10 @@ void Game::Update(float dt) {
     for (Familiar& familiar : familiars) {
         familiar.Render(&renderData);
     }
+    damageNumberManager.Update(dt);
+    damageNumberManager.Render(&renderData);
     EndMode2D();
+    DrawUI();
 }
 
 void Game::Shutdown() {
@@ -208,7 +227,7 @@ void Game::ProcessProjectiles(float dt) {
             break;
         }
         for (Enemy* enemy : enemies) {
-            if (enemy->DoCollision(projectile)) {
+            if (enemy->DoCollision(this, projectile)) {
                 deleted = true;
                 hitCount++;
             }

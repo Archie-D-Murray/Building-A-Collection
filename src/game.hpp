@@ -1,4 +1,5 @@
 #pragma once
+#include "damage_number_manager.hpp"
 #include "familiar.hpp"
 #include "familiar_egg.hpp"
 #include "game_config.hpp"
@@ -14,7 +15,6 @@ class Game {
     Sprites::RenderData renderData;
 public:
     Vector2 screenSize;
-    Vector2 pixelOffset;
     Player player;
     std::vector<Familiar> familiars;
     std::vector<FamiliarEgg> familiarEggs;
@@ -23,8 +23,10 @@ public:
     std::vector<Projectile*> familiarProjectiles;
     Spawner enemySpawner;
     Spawner familiarSpawner;
+    DamageNumberManager damageNumberManager;
     const GameConfig config;
     float zoom = 4.0f;
+    float scale;
 
     Game(Vector2 screenSize);
     void Init();
@@ -33,6 +35,7 @@ public:
 
 private:
     void ProcessProjectiles(float dt);
+    void DrawUI();
     static void SpawnRandomEnemy(Game* game, Vector2 position);
     static void SpawnRandomFamiliar(Game* game, Vector2 position);
 };

@@ -6,8 +6,7 @@
 #include "projectile.hpp"
 
 
-Player::Player(Game* game) : effectable(), health(game->config.playerStats.health) { 
-}
+Player::Player(Game* game) : effectable(), health(100.0f) {}
 
 void Player::Init(Game* game) {
     sprite = Sprites::Player;
@@ -15,9 +14,11 @@ void Player::Init(Game* game) {
     velocity = { 0 };
     speed = game->config.playerStats.speed;
     collisionRadius = game->config.playerStats.collisionRadius;
+    health = Health(game->config.playerStats.health);
     AddFamiliar(game, Fire, Common);
     effectable = Effectable();
     effectable.health = &health;
+    TraceLog(LOG_INFO, "Player health: %.0f", health.CurrentHealth());
 }
 
 void Player::Update(float dt) {
@@ -65,6 +66,7 @@ void Player::Damage(Game* game, Projectile* projectile) {
     if (game->familiars.empty()) {
         TraceLog(LOG_INFO, "Player was hit for %0.0f damage", projectile->damage);
         health.Damage(projectile->damage);
+        game->damageNumberManager.PushDamageNumber(projectile->damage, projectile->position);
         for (Effect& effect : projectile->effects) {
             effectable.AcceptEffect(effect);
         }

@@ -4,7 +4,7 @@
 Health::Health(float maxHealth) : 
     currentHealth(maxHealth),
     maxHealth(maxHealth)
-    { }
+{}
 
 void Health::Damage(float amount) {
     if (amount == 0.0f) {

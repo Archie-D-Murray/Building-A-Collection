@@ -1,23 +1,31 @@
-#include <iostream>
 #include "raylib.h"
-#include "raymath.h"
 #include "src/game.hpp"
 
-Vector2 SetWindowDefaults() {
+Vector2 SetWindowDefaults(bool capFPS = true) {
     int monitor = GetCurrentMonitor();
     int width = GetMonitorWidth(monitor);
     int height = GetMonitorHeight(monitor);
-    int maxFPS = GetMonitorRefreshRate(monitor);
     SetWindowSize(width * 0.75f, height * 0.75f);
     SetWindowPosition(width * 0.5f - width * 0.375f, height * 0.5f - height * 0.375f);
-    SetTargetFPS(maxFPS);
+    if (capFPS) {
+        int maxFPS = GetMonitorRefreshRate(monitor);
+        SetTargetFPS(maxFPS);
+    }
     TraceLog(LOG_INFO, "Initialized window of size: %dx%d", (int)(width * 0.75f), (int)(height * 0.75f));
     return { width * 0.75f, height * 0.75f };
 }
 
-int main(void) {
+bool CapFPS(int argc, char* argv[]) {
+    if (argc < 2) {
+        return true;
+    }
+    return strcmp(argv[1], "--no-fps-cap") != 0;
+}
+
+int main(int argc, char* argv[]) {
+    bool capFPS = CapFPS(argc, argv);
     InitWindow(0, 0, "Making a Collection");
-    Vector2 screenSize = SetWindowDefaults();
+    Vector2 screenSize = SetWindowDefaults(capFPS);
     InitAudioDevice();
 
     Game game = Game(screenSize);
