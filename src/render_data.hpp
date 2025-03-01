@@ -55,6 +55,7 @@ namespace Sprites {
     class RenderData {
     private:
         Texture2D atlas;
+        Texture2D worldMask;
         Font font;
         NPatchInfo normal;
         NPatchInfo pressed;
@@ -112,8 +113,11 @@ namespace Sprites {
             [Lamp]                  = CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
     };
     public:
-        RenderData(const char* atlasFileName, const char* fontFileName) {
+        RenderData(const char* atlasFileName, const char* fontFileName, const char* maskFileName) {
             atlas = LoadTexture(atlasFileName);
+            worldMask = LoadTexture(maskFileName);
+            SetTextureFilter(atlas, TEXTURE_FILTER_POINT);
+            SetTextureFilter(worldMask, TEXTURE_FILTER_POINT);
             font = LoadFont(fontFileName);
             normal = {
                 .source = { 0, 4 * SPRITE_SIZE, 6 * SPRITE_SIZE, 6 * SPRITE_SIZE },
@@ -138,6 +142,10 @@ namespace Sprites {
 
         inline Texture2D& GetAtlas() {
             return atlas;
+        }
+
+        inline Texture2D& WorldMask() {
+            return worldMask;
         }
 
         inline Font& GetFont() {

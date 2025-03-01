@@ -23,7 +23,7 @@ public:
     float familiarRotation;
     Vector2 position;
     void Init(Game* game);
-    void Update(float dt);
+    void Update(Game* game, float dt);
     void Render(Sprites::RenderData* data);
     void AddFamiliar(Game* game, FamiliarType type, Tier tier);
     void Destroy();

@@ -12,7 +12,7 @@
 
 GameConfig CreateConfig() {
     return GameConfig {
-        .playerStats = PlayerStats{
+        .playerStats = PlayerStats {
             .speed = 150.0f,
             .health = 100.f,
             .collisionRadius = 6.0f,
@@ -112,12 +112,13 @@ Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data) :
     screenSize(screenSize), 
     scale(1080.0f / screenSize.y), 
     zoom(4.0f * 1080.0f / screenSize.y),
+    worldRadius(data->WorldMask().width * 0.5f),
     player(this) 
 {
     if (state == InGame) {
         player = Player(this);
         Rectangle spawnArea = {0, 0, screenSize.x / zoom, screenSize.y / zoom};
-        familiarSpawner = Spawner(screenSize * 0.5f / zoom, spawnArea.height * 0.1f, spawnArea.height * 0.45f, 10.0f, Game::SpawnRandomFamiliar);
+        familiarSpawner = Spawner(screenSize * 0.5f / zoom, worldRadius * 0.2f, worldRadius * 0.9f, 10.0f, Game::SpawnRandomFamiliar);
         enemySpawner = Spawner(screenSize * 0.5f / zoom, spawnArea, 2.5f, Game::SpawnRandomEnemy);
     }
     fader.StartFade(true);
@@ -130,6 +131,7 @@ void Game::Init() {
 }
 
 void Game::GameUI(float dt) {
+    DrawFPS(10, 10);
     const Vector2 healthBarScale = {0.5f, 0.95f};
     const Color red = {128, 0, 0, 255};
     const float scale = screenSize.x * 0.25f / renderData->GetSource(Sprites::HealthBarBackground).width;
@@ -140,14 +142,16 @@ void Game::GameUI(float dt) {
     const float healthBarXOffset = 12 + 3 * Sprites::SPRITE_SIZE;
     DrawRectangleRec(bar, red);
     renderData->DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
+    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], distance from centre: %.0f, dot: %.2f", player.position.x, player.position.y, Vector2Distance(player.position, screenSize * 0.5f), Vector2DotProduct(Vector2Normalize(screenSize * 0.5f - player.position), Vector2Normalize(player.Velocity()))), 10, 25, 14, WHITE);
 }
 
 void Game::GameBackground() {
-    for (float y = Sprites::SPRITE_SIZE * 0.5f; y < screenSize.y - Sprites::SPRITE_SIZE * 0.5f; y += Sprites::SPRITE_SIZE) {
-        for (float x = Sprites::SPRITE_SIZE * 0.5f; x < screenSize.x - Sprites::SPRITE_SIZE * 0.5f; x += Sprites::SPRITE_SIZE) {
+    for (float y = screenSize.y * 0.5f + Sprites::SPRITE_SIZE * 0.5f - worldRadius; y <= screenSize.y * 0.5f + worldRadius - Sprites::SPRITE_SIZE * 0.5f; y += Sprites::SPRITE_SIZE) {
+        for (float x = screenSize.x * 0.5f + Sprites::SPRITE_SIZE * 0.5f - worldRadius; x <= screenSize.x * 0.5f + worldRadius - Sprites::SPRITE_SIZE * 0.5f; x += Sprites::SPRITE_SIZE) {
             renderData->DrawSprite(Sprites::GroundTile, {x, y});
         }
     }
+    DrawTextureV(renderData->WorldMask(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
 };
 
 State Game::Update(float dt) {
@@ -155,7 +159,7 @@ State Game::Update(float dt) {
         BeginMode2D(Camera2D{ .offset = screenSize * 0.5f, .target = player.position, .zoom = zoom });
         GameBackground();
         if (!player.GetHealth().IsDead()) {
-            player.Update(dt);
+            player.Update(this, dt);
             player.Render(renderData);
         } else {
         }
@@ -202,6 +206,10 @@ State Game::Update(float dt) {
         damageNumberManager.Render(renderData);
         EndMode2D();
         GameUI(dt);
+        if (player.GetHealth().IsDead()) {
+            fader.StartFade(false);
+            nextState = Menu;
+        }
     } else {
         SetMouseCursor(MOUSE_CURSOR_ARROW);
         if (Button(Vector2{screenSize.x * 0.5f, screenSize.y * 0.5f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "Play", renderData)) {

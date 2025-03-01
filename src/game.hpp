@@ -22,6 +22,7 @@ public:
     Fader fader;
     Vector2 screenSize;
     Player player;
+    float worldRadius;
     std::vector<Familiar> familiars;
     std::vector<FamiliarEgg> familiarEggs;
     std::vector<Enemy*> enemies;

@@ -27,7 +27,7 @@ bool CapFPS(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
     bool capFPS = CapFPS(argc, argv);
     InitWindow(0, 0, "Making a Collection");
-    Sprites::RenderData data = Sprites::RenderData("./atlas.png", "./Alagard.ttf");
+    Sprites::RenderData data = Sprites::RenderData("./atlas.png", "./Alagard.ttf", "./world_mask.png");
     Vector2 screenSize = SetWindowDefaults(capFPS);
     InitAudioDevice();
     std::vector<Game> sceneStack;
@@ -40,7 +40,6 @@ int main(int argc, char* argv[]) {
         running = !WindowShouldClose();
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawFPS(10, 10);
         State newState = sceneStack.back().Update(GetFrameTime());
         if (newState != None) {
             if (newState != Quit) {

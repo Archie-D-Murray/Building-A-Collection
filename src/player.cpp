@@ -13,7 +13,7 @@ void Player::Init(Game* game) {
     animator.SetAnimations(Idle, game->config.playerStats.idle);
     animator.SetAnimations(Move, game->config.playerStats.move);
     TraceLog(LOG_INFO, "Initilised player animations");
-    position = game->screenSize * 0.5f / game->zoom;
+    position = game->screenSize * 0.5f;
     velocity = { 0 };
     speed = game->config.playerStats.speed;
     collisionRadius = game->config.playerStats.collisionRadius;
@@ -24,7 +24,7 @@ void Player::Init(Game* game) {
     TraceLog(LOG_INFO, "Player health: %.0f", health.CurrentHealth());
 }
 
-void Player::Update(float dt) {
+void Player::Update(Game* game, float dt) {
     familiarRotation += dt * PI;
     if (effectable.stunned) {
         return;
@@ -38,7 +38,14 @@ void Player::Update(float dt) {
     velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
     animator.Play(Vector2LengthSqr(velocity) > 0.01f ? Move : Idle);
     animator.Update(dt);
-    position += velocity;
+    float distanceFromCenter = Vector2Length(position - game->screenSize * 0.5f);
+    Vector2 dirFromWorld = Vector2Normalize(game->screenSize * 0.5f - position);
+    if (distanceFromCenter >= game->worldRadius - collisionRadius && Vector2DotProduct(dirFromWorld, Vector2Normalize(velocity)) < 0.0f) {
+        float angle = Vector2Angle(Vector2 { 0, 1 }, position - game->screenSize * 0.5f);
+        position = game->screenSize * 0.5f + Vector2Rotate({ 0, game->worldRadius - collisionRadius }, angle);
+    } else {
+        position += velocity;
+    }
 }
 
 void Player::Render(Sprites::RenderData* data) {
