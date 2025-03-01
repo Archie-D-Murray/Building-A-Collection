@@ -1,5 +1,6 @@
 #pragma once
 #include "effectable.hpp"
+#include "entity_animator.hpp"
 #include "game_config.hpp"
 #include "health.hpp"
 #include "raylib.h"
@@ -14,6 +15,7 @@ class Player {
     Sprites::SpriteID sprite;
     Health health;
     Effectable effectable;
+    EntityAnimator animator;
 
 public:
     Player(Game* game);

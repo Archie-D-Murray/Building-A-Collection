@@ -2,6 +2,7 @@
 #include "game.hpp"
 #include "player.hpp"
 #include "projectile.hpp"
+#include "render_data.hpp"
 
 NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Normal].health) {
     effectable.health = &health;
@@ -14,7 +15,7 @@ void NormalEnemy::Init(Game* game) {
     collisionRadius = game->config.enemyStats[Normal].collisionRadius;
     projectileRadius = game->config.enemyStats[Normal].projectileRadius;
     damage = game->config.enemyStats[Normal].damage;
-    sprite = game->config.enemyStats[Normal].sprite;
+    animator.SetAnimations(Idle, game->config.enemyStats[Normal].sprites);
 }
 
 void NormalEnemy::Update(float dt, Player& player) {
@@ -23,14 +24,24 @@ void NormalEnemy::Update(float dt, Player& player) {
     if (attackTimer > 0.0f) {
         attackTimer -= dt;
     }
+    animator.Update(dt);
 }
 
 void NormalEnemy::Render(Sprites::RenderData* data) {
-    data->DrawSprite(sprite, position);
+    data->DrawSprite(animator.GetSprite(), position);
 }
 
 void NormalEnemy::Fire(Game* game) {
-    game->enemyProjectiles.push_back(new Projectile(position, Vector2Normalize(game->player.position - position), projectileSpeed, projectileRadius, damage, Sprites::EnemyProjectile));
+    game->enemyProjectiles.push_back(
+        new Projectile(
+            position, 
+            Vector2Normalize(game->player.position - position),
+            projectileSpeed, 
+            projectileRadius, 
+            damage, 
+            game->config.enemyStats[Normal].projectileSprites
+        )
+    );
     attackTimer += attackTime;
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "effectable.hpp"
+#include "entity_animator.hpp"
 #include "health.hpp"
 #include "raylib.h"
 #include "render_data.hpp"
@@ -18,6 +19,7 @@ protected:
     float attackTimer = 0.0f;
     Health health;
     Effectable effectable;
+    EntityAnimator animator;
 public:
     Vector2 position;
     EnemyType type;
@@ -36,4 +38,5 @@ public:
     virtual bool CanFire(const Player& player);
     virtual bool DoCollision(Game* game, Projectile* projectile);
     Health& GetHealth() { return health; };
+    Vector2& GetVelocity() { return velocity; }
 };

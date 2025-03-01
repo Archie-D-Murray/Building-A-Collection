@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include "player.hpp"
 #include "raymath.h"
+#include "debug.h"
 
 const float DAMAGE_MODIFIERS[TierCount] = {
     [Common] = 1.0f,
@@ -24,14 +25,12 @@ void Familiar::Init(FamiliarType type, Tier tier, const GameConfig& config) {
     effectMagnitude = config.familiarStats[type].effectMagnitude;
     effectDuration = config.familiarStats[type].effectDuration;
     effectTickRate = config.familiarStats[type].effectTickRate;
-    speed = config.familiarStats[type].speed;
-    collisionRadius = config.familiarStats[type].collisionRadius;
     projectileRadius = config.familiarStats[type].projectileRadius;
     projectileSpeed = config.familiarStats[type].projectileSpeed;
     attackTime = config.familiarStats[type].attackTime;
     attackRange = config.familiarStats[type].attackRange;
     arcCount = config.familiarStats[type].arcCount;
-    sprite = config.familiarStats[type].sprite;
+    animator.SetAnimations(Idle, config.familiarStats[type].sprites);
 }
 
 void Familiar::AdvanceTier() {
@@ -49,7 +48,7 @@ void Familiar::AdvanceTier() {
         default:
             break;
     }
-    damage = roundf(damage * DAMAGE_MODIFIERS[tier + 1]);
+    damageModifier = DAMAGE_MODIFIERS[tier];
 }
 
 void Familiar::DropTier() {
@@ -66,11 +65,11 @@ void Familiar::DropTier() {
         default:
             break;
     }
-    damage = roundf(damage / DAMAGE_MODIFIERS[tier]);
+    damageModifier = DAMAGE_MODIFIERS[tier];
 }
 
 void Familiar::Render(Sprites::RenderData* data) {
-    data->DrawSprite(sprite, position, 0.0f);
+    data->DrawSprite(animator.GetSprite(), position, 0.0f);
 }
 
 void Familiar::Update(float dt, const Player& player, float offset) {
@@ -78,6 +77,7 @@ void Familiar::Update(float dt, const Player& player, float offset) {
     if (attackTimer >= 0.0f) {
         attackTimer -= dt;
     }
+    animator.Update(dt);
 }
 
 Enemy* Familiar::GetTarget(Game* game) {
@@ -95,7 +95,18 @@ Enemy* Familiar::GetTarget(Game* game) {
 void Familiar::Attack(Game* game, Enemy* target) {
     attackTimer += attackTime;
     game->familiarProjectiles.push_back(
-        new Projectile(position, Vector2Normalize(target->position - position), projectileSpeed, projectileRadius, damage, game->config.familiarStats[type].projectileSprite));
+        new Projectile(
+            position, 
+            Vector2Normalize(target->position + target->GetVelocity() - position),
+            projectileSpeed, 
+            projectileRadius, 
+            damage * damageModifier, 
+            game->config.familiarStats[type].projectileSprites
+        )
+    );
+    if (damage == 0.0f) {
+        DebugTrap();
+    }
     Projectile* projectile = game->familiarProjectiles.back();
     switch (type) {
     case Fire:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "render_data.hpp"
+#include <vector>
 enum FamiliarType { Fire, Water, Earth, Lightning, FamiliarCount };
 enum Tier { Common, Uncommon, Rare, Epic, TierCount };
 enum EnemyType { Normal, Heavy, EnemyCount };
@@ -10,6 +11,8 @@ struct PlayerStats {
     float speed;
     float health;
     float collisionRadius;
+    std::vector<Sprites::SpriteID> idle;
+    std::vector<Sprites::SpriteID> move;
 };
 
 struct FamiliarStats {
@@ -25,8 +28,8 @@ struct FamiliarStats {
     float attackRange;
     int arcCount;
     ProjectileType projectileType;
-    Sprites::SpriteID projectileSprite;
-    Sprites::SpriteID sprite;
+    std::vector<Sprites::SpriteID> projectileSprites;
+    std::vector<Sprites::SpriteID> sprites;
 };
 
 struct EnemyStats {
@@ -36,7 +39,8 @@ struct EnemyStats {
     float collisionRadius;
     float projectileRadius;
     float speed;
-    Sprites::SpriteID sprite;
+    std::vector<Sprites::SpriteID> sprites;
+    std::vector<Sprites::SpriteID> projectileSprites;
 };
 
 struct GameConfig {

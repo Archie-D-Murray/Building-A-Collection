@@ -1,5 +1,7 @@
 #include "raylib.h"
 #include "src/game.hpp"
+#include "src/render_data.hpp"
+#include <string.h>
 
 Vector2 SetWindowDefaults(bool capFPS = true) {
     int monitor = GetCurrentMonitor();
@@ -25,22 +27,30 @@ bool CapFPS(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
     bool capFPS = CapFPS(argc, argv);
     InitWindow(0, 0, "Making a Collection");
+    Sprites::RenderData data = Sprites::RenderData("./atlas.png", "./Alagard.ttf");
     Vector2 screenSize = SetWindowDefaults(capFPS);
     InitAudioDevice();
-
-    Game game = Game(screenSize);
-    game.Init();
+    std::vector<Game> sceneStack;
+    sceneStack.push_back(Game(Menu, screenSize, &data));
+    sceneStack.back().Init();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
         DrawFPS(10, 10);
-        game.Update(GetFrameTime());
+        State newState = sceneStack.back().Update(GetFrameTime());
+        if (newState != None) {
+            TraceLog(LOG_INFO, "Switching scene");
+            sceneStack.back().Shutdown();
+            sceneStack.pop_back();
+            sceneStack.push_back(Game(newState, screenSize, &data));
+            sceneStack.back().Init();
+        }
         EndDrawing();
     }
 
-    game.Shutdown();
-
+    sceneStack.back().Shutdown();
+    data.Unload();
     CloseAudioDevice();
     CloseWindow();
     return 0;

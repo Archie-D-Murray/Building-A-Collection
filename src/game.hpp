@@ -1,5 +1,6 @@
 #pragma once
 #include "damage_number_manager.hpp"
+#include "fader.hpp"
 #include "familiar.hpp"
 #include "familiar_egg.hpp"
 #include "game_config.hpp"
@@ -11,9 +12,13 @@
 
 GameConfig CreateConfig();
 
+enum State { None, InGame, Menu };
+
 class Game {
-    Sprites::RenderData renderData;
+    Sprites::RenderData* renderData;
 public:
+    State state;
+    Fader fader;
     Vector2 screenSize;
     Player player;
     std::vector<Familiar> familiars;
@@ -28,14 +33,14 @@ public:
     float zoom = 4.0f;
     float scale;
 
-    Game(Vector2 screenSize);
+    Game(State state, Vector2 screenSize, Sprites::RenderData* data);
     void Init();
-    void Update(float dt);
+    State Update(float dt);
     void Shutdown();
 
 private:
     void ProcessProjectiles(float dt);
-    void DrawUI();
+    void GameUI(float dt);
     static void SpawnRandomEnemy(Game* game, Vector2 position);
     static void SpawnRandomFamiliar(Game* game, Vector2 position);
 };

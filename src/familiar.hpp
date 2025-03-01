@@ -13,8 +13,6 @@ private:
 
     const static int LEVEL_PER_TIER = 2;
 
-    Sprites::SpriteID sprite;
-    Vector2 velocity;
     float followRadius = 50;
     int nextTierLevel = 2;
     float attackTimer = 0.0f;
@@ -28,11 +26,10 @@ public:
     Tier tier = Common;
 
     float damage;
+    float damageModifier = 1.0f;
     float effectMagnitude;
     float effectDuration;
     float effectTickRate;
-    float speed;
-    float collisionRadius;
     float projectileRadius;
     float projectileSpeed;
     float attackTime;

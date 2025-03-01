@@ -1,5 +1,7 @@
 #include "damage_number_manager.hpp"
+#include "raymath.h"
 #include <cstdint>
+#include "debug.h"
 
 void DamageNumberManager::Update(float dt) {
     uint8_t alpha = 255;
@@ -20,6 +22,10 @@ void DamageNumberManager::Render(Sprites::RenderData* data) {
 }
 
 void DamageNumberManager::PushDamageNumber(float damage, Vector2 position) {
+    if (fabs(damage) < EPSILON) {
+        DebugTrap();
+        return;
+    }
     if (count >= total) {
         GetOldest();
         damageNumbers[oldest].Reset(damage, position);

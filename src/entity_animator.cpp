@@ -1,4 +1,5 @@
 #include "entity_animator.hpp"
+#include "render_data.hpp"
 #include <vector>
 
 EntityAnimator::EntityAnimator() : 
@@ -21,7 +22,7 @@ void EntityAnimator::Play(Animation animation) {
 
 void EntityAnimator::Update(float dt) {
     currentAnimationTime += dt;
-    while (currentAnimationTime <= animationTime) {
+    while (currentAnimationTime >= animationTime) {
         currentAnimationTime -= animationTime;
         currentFrame = ++currentFrame % animations[currentAnimation].size();
     }
@@ -31,9 +32,9 @@ Sprites::SpriteID EntityAnimator::GetSprite() {
     return animations[currentAnimation][currentFrame];
 }
 
-void EntityAnimator::SetAnimations(Animation animation, std::initializer_list<Sprites::SpriteID> frames) {
+void EntityAnimator::SetAnimations(Animation animation, std::vector<Sprites::SpriteID> frames) {
     animations[animation] = std::vector<Sprites::SpriteID>();
-    for (const Sprites::SpriteID* iter = frames.begin(); iter != frames.end(); iter++) {
-        animations[animation].push_back(*iter);
+    for (Sprites::SpriteID frame : frames) {
+        animations[animation].push_back(frame);
     }
 }

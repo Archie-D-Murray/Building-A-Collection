@@ -4,9 +4,9 @@
 #include "player.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include "render_data.hpp"
 
 HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Heavy].health) {
-    type = Heavy;
     effectable.health = &health;
     Init(game);
 }
@@ -14,7 +14,7 @@ HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->con
 void HeavyEnemy::Init(Game* game) {
     speed = game->config.enemyStats[Heavy].speed;
     collisionRadius = game->config.enemyStats[Heavy].collisionRadius;
-    sprite = game->config.enemyStats[Heavy].sprite;
+    animator.SetAnimations(Idle, game->config.enemyStats[Heavy].sprites);
 }
 
 void HeavyEnemy::Update(float dt, Player& player) {
@@ -26,10 +26,11 @@ void HeavyEnemy::Update(float dt, Player& player) {
     } else if (attackTimer >= 0.0f) {
         attackTimer -= dt;
     }
+    animator.Update(dt);
 }
 
 void HeavyEnemy::Render(Sprites::RenderData* data) {
-    data->DrawSprite(sprite, position);
+    data->DrawSprite(animator.GetSprite(), position);
 }
 
 void HeavyEnemy::Fire(Game* game) {
