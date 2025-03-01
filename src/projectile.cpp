@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "render_data.hpp"
+#include "vfx.hpp"
 
 Projectile::Projectile(Vector2 position, Vector2 direction, float speed, float collisionRadius, float damage, std::vector<Sprites::SpriteID> frames) :
     position(position),
@@ -14,6 +15,12 @@ Projectile::Projectile(Vector2 position, Vector2 direction, float speed, float c
     animator.SetAnimations(Idle, frames);
 }
 
+void Projectile::AddVFX(float duration, std::vector<Sprites::SpriteID> frames) {
+    data.frames = frames;
+    data.duration = duration;
+    data.hasVFX = true;
+}
+
 void Projectile::Update(float dt) {
     position += direction * (speed * dt);
     animator.Update(dt);
@@ -21,6 +28,13 @@ void Projectile::Update(float dt) {
 
 void Projectile::Render(Sprites::RenderData* data) {
     data->DrawSprite(animator.GetSprite(), position, angle);
+}
+
+void Projectile::PushVFX(Game* game) {
+    if (data.hasVFX) {
+        game->visualEffects.push_back(VisualEffect(position, data.duration, data.frames));
+        data.hasVFX = false;
+    }
 }
 
 bool Projectile::OffScreen(Game* game) {

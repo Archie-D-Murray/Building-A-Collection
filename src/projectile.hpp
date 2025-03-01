@@ -9,6 +9,12 @@
 class Game;
 class Effect;
 
+struct VisualEffectData {
+    std::vector<Sprites::SpriteID> frames;
+    float duration;
+    bool hasVFX = false;
+};
+
 class Projectile {
 public:
     Projectile(Vector2 position, Vector2 direction, float speed, float collisionRadius, float damage, std::vector<Sprites::SpriteID> frames);
@@ -21,9 +27,12 @@ public:
     EntityAnimator animator;
     std::vector<Effect> effects;
     ProjectileType type = Linear;
+    VisualEffectData data;
     int chainCount = 0;
 
     void Update(float dt);
     void Render(Sprites::RenderData* data);
     bool OffScreen(Game* game);
+    void PushVFX(Game* game);
+    void AddVFX(float duration, std::vector<Sprites::SpriteID> frames);
 };

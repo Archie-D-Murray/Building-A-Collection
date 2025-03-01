@@ -36,6 +36,10 @@ namespace Sprites {
         EarthProjectile1,
         LightningProjectile0,
         LightningProjectile1,
+        EarthVisual,
+        LightningVisual0,
+        LightningVisual1,
+        LightningVisual2,
         NormalTypeEnemy0,
         NormalTypeEnemy1,
         NormalTypeEnemy2,
@@ -46,7 +50,6 @@ namespace Sprites {
         EnemyProjectile1,
         HealthBarOverlay,
         HealthBarBackground,
-        GroundTile,
         Lamp,
         Count 
     };
@@ -99,6 +102,15 @@ namespace Sprites {
             [EnemyProjectile1]      = CreateSprite({11 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
 
             //---------------------------------------------------------------------------------------------------------------------------\\
+            // Visual Effect                                                                                                                        \\
+            //---------------------------------------------------------------------------------------------------------------------------\\
+
+            [EarthVisual]           = CreateSprite({ 1 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
+            [LightningVisual0]      = CreateSprite({ 4 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
+            [LightningVisual1]      = CreateSprite({ 6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
+            [LightningVisual2]      = CreateSprite({ 8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
+
+            //---------------------------------------------------------------------------------------------------------------------------\\
             // UI                                                                                                                        \\
             //---------------------------------------------------------------------------------------------------------------------------\\
 
@@ -109,7 +121,6 @@ namespace Sprites {
             // Background                                                                                                                \\
             //---------------------------------------------------------------------------------------------------------------------------\\
 
-            [GroundTile]            = CreateSprite({ 0 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 }),
             [Lamp]                  = CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
     };
     public:

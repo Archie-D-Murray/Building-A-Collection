@@ -11,6 +11,9 @@ EntityAnimator::EntityAnimator() :
 }
 
 void EntityAnimator::Play(Animation animation) {
+    if (currentAnimation == animation) {
+        return;
+    }
     if (animations.find(animation) != animations.end()) {
         currentAnimation = animation;
         currentFrame = 0;

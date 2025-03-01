@@ -6,6 +6,7 @@
 #include "player.hpp"
 #include "raymath.h"
 #include "debug.h"
+#include "render_data.hpp"
 
 const float DAMAGE_MODIFIERS[TierCount] = {
     [Common] = 1.0f,
@@ -110,15 +111,17 @@ void Familiar::Attack(Game* game, Enemy* target) {
     Projectile* projectile = game->familiarProjectiles.back();
     switch (type) {
     case Fire:
-        break;
     case Water:
         projectile->type = Linear;
         break;
     case Earth:
         projectile->type = AoE;
+        projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
+        break;
     case Lightning:
         projectile->chainCount = this->arcCount;
         projectile->type = Chain;
+        projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
         break;
     default:
         break;

@@ -1,14 +1,14 @@
 #include "damage_number_manager.hpp"
-#include "raymath.h"
 #include <cstdint>
-#include "debug.h"
+#include "damage_number.hpp"
 
 void DamageNumberManager::Update(float dt) {
     uint8_t alpha = 255;
-    for (size_t i = 0; i < count;) {
+    for (size_t i = 0; i < damageNumbers.size();) {
         damageNumbers[i].Update(dt);
         if (damageNumbers[i].colour.a == 0) {
-            damageNumbers[i] = damageNumbers[--count];
+            damageNumbers[i] = damageNumbers.back();
+            damageNumbers.pop_back();
         } else {
             i++;
         }
@@ -16,31 +16,23 @@ void DamageNumberManager::Update(float dt) {
 }
 
 void DamageNumberManager::Render(Sprites::RenderData* data) {
-    for (size_t i = 0; i < count; i++) {
-        damageNumbers[i].Render(data);
+    for (DamageNumber& number : damageNumbers) {
+        number.Render(data);
     }
 }
 
 void DamageNumberManager::PushDamageNumber(float damage, Vector2 position) {
-    if (fabs(damage) < EPSILON) {
-        DebugTrap();
-        return;
-    }
-    if (count >= total) {
-        GetOldest();
-        damageNumbers[oldest].Reset(damage, position);
-    } else {
-        damageNumbers[count++].Reset(damage, position);
-        GetOldest();
-    }
+    damageNumbers.push_back(DamageNumber { .damage = damage, .position = position });
 }
 
-void DamageNumberManager::GetOldest() {
+size_t DamageNumberManager::GetOldest() {
     uint8_t alpha = 255;
-    for (size_t i = 0; i < count; i++) {
+    size_t oldest = damageNumbers.size();
+    for (size_t i = 0; i < damageNumbers.size(); i++) {
         if (damageNumbers[i].colour.a < alpha) {
             oldest = i;
             alpha = damageNumbers[i].colour.a;
         }
     }
+    return oldest;
 }

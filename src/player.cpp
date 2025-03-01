@@ -77,6 +77,7 @@ bool Player::Collides(Projectile* projectile) {
 void Player::Damage(Game* game, Projectile* projectile) {
     TraceLog(LOG_INFO, "Player was hit for %0.0f damage", projectile->damage);
     health.Damage(projectile->damage);
+    projectile->PushVFX(game);
     game->damageNumberManager.PushDamageNumber(projectile->damage, projectile->position);
     for (Effect& effect : projectile->effects) {
         effectable.AcceptEffect(effect);

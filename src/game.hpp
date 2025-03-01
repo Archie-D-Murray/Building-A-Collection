@@ -8,6 +8,7 @@
 #include "render_data.hpp"
 #include "enemy.hpp"
 #include "spawner.hpp"
+#include "vfx.hpp"
 #include <vector>
 
 GameConfig CreateConfig();
@@ -28,6 +29,7 @@ public:
     std::vector<Enemy*> enemies;
     std::vector<Projectile*> enemyProjectiles;
     std::vector<Projectile*> familiarProjectiles;
+    std::vector<VisualEffect> visualEffects;
     Spawner enemySpawner;
     Spawner familiarSpawner;
     DamageNumberManager damageNumberManager;
@@ -43,6 +45,7 @@ public:
 private:
     void ProcessProjectiles(float dt);
     void GameUI(float dt);
+    void UpdateVisualEffects(float dt);
     void GameBackground();
     static void SpawnRandomEnemy(Game* game, Vector2 position);
     static void SpawnRandomFamiliar(Game* game, Vector2 position);

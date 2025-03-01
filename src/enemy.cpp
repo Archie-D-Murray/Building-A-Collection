@@ -17,6 +17,7 @@ bool Enemy::CanFire(const Player& player) {
 bool Enemy::DoCollision(Game* game, Projectile* projectile) {
     if (CheckCollisionCircles(projectile->position, projectile->collisionRadius, position, collisionRadius)) {
         health.Damage(projectile->damage);
+        projectile->PushVFX(game);
         game->damageNumberManager.PushDamageNumber(projectile->damage, projectile->position);
         for (Effect& effect : projectile->effects) {
             effectable.AcceptEffect(effect);

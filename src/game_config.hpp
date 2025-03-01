@@ -26,10 +26,12 @@ struct FamiliarStats {
     float projectileSpeed;
     float attackTime;
     float attackRange;
+    float visualDuration;
     int arcCount;
     ProjectileType projectileType;
     std::vector<Sprites::SpriteID> projectileSprites;
     std::vector<Sprites::SpriteID> sprites;
+    std::vector<Sprites::SpriteID> visualEffectSprites;
 };
 
 struct EnemyStats {
@@ -48,5 +50,3 @@ struct GameConfig {
     EnemyStats enemyStats[EnemyType::EnemyCount];
     FamiliarStats familiarStats[FamiliarType::FamiliarCount];
 };
-
-// TODO: Control familiar tier up

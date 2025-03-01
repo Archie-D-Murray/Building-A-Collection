@@ -1,13 +1,12 @@
 #pragma once
 #include "damage_number.hpp"
 #include "render_data.hpp"
+#include <cstddef>
+#include <vector>
 class DamageNumberManager {
     const float total = 10;
-    DamageNumber damageNumbers[10];
-    size_t count = 0;
-    size_t oldest = 0;
-
-    void GetOldest();
+    std::vector<DamageNumber> damageNumbers;
+    size_t GetOldest();
 public:
     void Update(float dt);
     void Render(Sprites::RenderData* data);

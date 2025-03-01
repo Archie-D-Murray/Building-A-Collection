@@ -16,8 +16,8 @@ GameConfig CreateConfig() {
             .speed = 150.0f,
             .health = 100.f,
             .collisionRadius = 6.0f,
-            .idle = {Sprites::Player0},
-            .move = {Sprites::Player0, Sprites::Player1, Sprites::Player2},
+            .idle = { Sprites::Player0 },
+            .move = { Sprites::Player0, Sprites::Player1, Sprites::Player2 },
         },
         .enemyStats = {
             [Normal] = EnemyStats {
@@ -27,8 +27,8 @@ GameConfig CreateConfig() {
                .collisionRadius = 8.0f,
                .projectileRadius = 4.0f,
                .speed = 100.0f,
-               .sprites = {Sprites::NormalTypeEnemy0, Sprites::NormalTypeEnemy1, Sprites::NormalTypeEnemy2},
-               .projectileSprites = {Sprites::EnemyProjectile0, Sprites::EnemyProjectile1},
+               .sprites = { Sprites::NormalTypeEnemy0, Sprites::NormalTypeEnemy1, Sprites::NormalTypeEnemy2 },
+               .projectileSprites = { Sprites::EnemyProjectile0, Sprites::EnemyProjectile1 },
             },
             [Heavy] = EnemyStats {
                .health = 50.0f,
@@ -37,8 +37,8 @@ GameConfig CreateConfig() {
                .collisionRadius = 16.0f,
                .projectileRadius = 0.0f,
                .speed = 75.0f,
-               .sprites = {Sprites::HeavyTypeEnemy0, Sprites::HeavyTypeEnemy1, Sprites::HeavyTypeEnemy2},
-               .projectileSprites = {Sprites::Count, Sprites::Count},
+               .sprites = { Sprites::HeavyTypeEnemy0, Sprites::HeavyTypeEnemy1, Sprites::HeavyTypeEnemy2 },
+               .projectileSprites = { Sprites::Count, Sprites::Count },
             }
         },
         .familiarStats = {
@@ -53,8 +53,8 @@ GameConfig CreateConfig() {
                 .attackTime = 1.0f,
                 .attackRange = 160.0f,
                 .arcCount = 0,
-                .projectileSprites = {Sprites::FireProjectile0, Sprites::FireProjectile1},
-                .sprites = {Sprites::FireFamiliar0, Sprites::FireFamiliar1, Sprites::FireFamiliar2},
+                .projectileSprites = { Sprites::FireProjectile0, Sprites::FireProjectile1 },
+                .sprites = { Sprites::FireFamiliar0, Sprites::FireFamiliar1, Sprites::FireFamiliar2 },
             },
             [Water] = FamiliarStats {
                 .damage = 10.0f,
@@ -68,8 +68,8 @@ GameConfig CreateConfig() {
                 .attackRange = 180.0f,
                 .arcCount = 0,
                 .projectileType = Linear,
-                .projectileSprites = {Sprites::WaterProjectile0, Sprites::WaterProjectile1},
-                .sprites = {Sprites::WaterFamiliar0, Sprites::WaterFamiliar1, Sprites::WaterFamiliar2},
+                .projectileSprites = { Sprites::WaterProjectile0, Sprites::WaterProjectile1 },
+                .sprites = { Sprites::WaterFamiliar0, Sprites::WaterFamiliar1, Sprites::WaterFamiliar2 },
             },
             [Earth] = FamiliarStats {
                 .damage = 100.0f,
@@ -81,10 +81,12 @@ GameConfig CreateConfig() {
                 .projectileSpeed = 100.0f,
                 .attackTime = 3.0f,
                 .attackRange = 200.0f,
+                .visualDuration = 1.5f,
                 .arcCount = 0,
                 .projectileType = AoE,
-                .projectileSprites = {Sprites::EarthProjectile0, Sprites::EarthProjectile1},
-                .sprites = {Sprites::EarthFamiliar0, Sprites::EarthFamiliar1, Sprites::EarthFamiliar2},
+                .projectileSprites = { Sprites::EarthProjectile0, Sprites::EarthProjectile1 },
+                .sprites = { Sprites::EarthFamiliar0, Sprites::EarthFamiliar1, Sprites::EarthFamiliar2 },
+                .visualEffectSprites = { Sprites::EarthVisual },
             },
             [Lightning] = FamiliarStats {
                 .damage = 25.0f,
@@ -96,10 +98,12 @@ GameConfig CreateConfig() {
                 .projectileSpeed = 500.0f,
                 .attackTime = 2.0f,
                 .attackRange = 100.0f,
+                .visualDuration = 0.5f,
                 .arcCount = 3,
                 .projectileType = Chain,
-                .projectileSprites = {Sprites::LightningProjectile0, Sprites::LightningProjectile1},
-                .sprites = {Sprites::LightningFamiliar0, Sprites::LightningFamiliar1, Sprites::LightningFamiliar2},
+                .projectileSprites = { Sprites::LightningProjectile0, Sprites::LightningProjectile1 },
+                .sprites = { Sprites::LightningFamiliar0, Sprites::LightningFamiliar1, Sprites::LightningFamiliar2 },
+                .visualEffectSprites = { Sprites::LightningVisual0, Sprites::LightningVisual1, Sprites::LightningVisual2 },
             },
         },
     };
@@ -118,8 +122,8 @@ Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data) :
     if (state == InGame) {
         player = Player(this);
         Rectangle spawnArea = {0, 0, screenSize.x / zoom, screenSize.y / zoom};
-        familiarSpawner = Spawner(screenSize * 0.5f / zoom, worldRadius * 0.2f, worldRadius * 0.9f, 10.0f, Game::SpawnRandomFamiliar);
-        enemySpawner = Spawner(screenSize * 0.5f / zoom, spawnArea, 2.5f, Game::SpawnRandomEnemy);
+        familiarSpawner = Spawner(screenSize * 0.5f, worldRadius * 0.2f, worldRadius * 0.9f, 10.0f, Game::SpawnRandomFamiliar);
+        enemySpawner = Spawner(screenSize * 0.5f, spawnArea, 2.5f, Game::SpawnRandomEnemy);
     }
     fader.StartFade(true);
 }
@@ -146,11 +150,6 @@ void Game::GameUI(float dt) {
 }
 
 void Game::GameBackground() {
-    for (float y = screenSize.y * 0.5f + Sprites::SPRITE_SIZE * 0.5f - worldRadius; y <= screenSize.y * 0.5f + worldRadius - Sprites::SPRITE_SIZE * 0.5f; y += Sprites::SPRITE_SIZE) {
-        for (float x = screenSize.x * 0.5f + Sprites::SPRITE_SIZE * 0.5f - worldRadius; x <= screenSize.x * 0.5f + worldRadius - Sprites::SPRITE_SIZE * 0.5f; x += Sprites::SPRITE_SIZE) {
-            renderData->DrawSprite(Sprites::GroundTile, {x, y});
-        }
-    }
     DrawTextureV(renderData->WorldMask(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
 };
 
@@ -158,11 +157,7 @@ State Game::Update(float dt) {
     if (state == InGame) {
         BeginMode2D(Camera2D{ .offset = screenSize * 0.5f, .target = player.position, .zoom = zoom });
         GameBackground();
-        if (!player.GetHealth().IsDead()) {
-            player.Update(this, dt);
-            player.Render(renderData);
-        } else {
-        }
+        player.Update(this, dt);
         for (size_t i = 0; i < familiarEggs.size();) {
             if (CheckCollisionCircles(player.position, player.collisionRadius, familiarEggs[i].position, familiarEggs[i].collisionRadius)) {
                 player.AddFamiliar(this, familiarEggs[i].type, familiarEggs[i].tier);
@@ -187,6 +182,7 @@ State Game::Update(float dt) {
                 enemy->Fire(this);
             }
         }
+        UpdateVisualEffects(dt);
         ProcessProjectiles(dt);
         familiarSpawner.Update(dt, this);
         enemySpawner.Update(dt, this);
@@ -202,6 +198,7 @@ State Game::Update(float dt) {
         for (Familiar& familiar : familiars) {
             familiar.Render(renderData);
         }
+        player.Render(renderData);
         damageNumberManager.Update(dt);
         damageNumberManager.Render(renderData);
         EndMode2D();
@@ -228,6 +225,19 @@ State Game::Update(float dt) {
         return nextState;
     }
     return None;
+}
+
+void Game::UpdateVisualEffects(float dt) {
+    for (size_t i = 0; i < visualEffects.size();) {
+        visualEffects[i].Update(dt);
+        if (visualEffects[i].Finished()) {
+            visualEffects[i] = visualEffects.back();
+            visualEffects.pop_back();
+        } else {
+            visualEffects[i].Render(renderData);
+            i++;
+        }
+    }
 }
 
 void Game::Shutdown() {}
@@ -273,6 +283,9 @@ void Game::ProcessProjectiles(float dt) {
             }
             if (hitCount >= hitMax) {
                 break;
+            }
+            if (projectile->OffScreen(this)) {
+                deleted = true;
             }
         }
         if (deleted) {
