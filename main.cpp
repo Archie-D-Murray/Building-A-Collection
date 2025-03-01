@@ -34,17 +34,24 @@ int main(int argc, char* argv[]) {
     sceneStack.push_back(Game(Menu, screenSize, &data));
     sceneStack.back().Init();
 
-    while (!WindowShouldClose()) {
+    bool running = true;
+
+    while (running) {
+        running = !WindowShouldClose();
         BeginDrawing();
         ClearBackground(BLACK);
         DrawFPS(10, 10);
         State newState = sceneStack.back().Update(GetFrameTime());
         if (newState != None) {
-            TraceLog(LOG_INFO, "Switching scene");
-            sceneStack.back().Shutdown();
-            sceneStack.pop_back();
-            sceneStack.push_back(Game(newState, screenSize, &data));
-            sceneStack.back().Init();
+            if (newState != Quit) {
+                TraceLog(LOG_INFO, "Switching scene");
+                sceneStack.back().Shutdown();
+                sceneStack.pop_back();
+                sceneStack.push_back(Game(newState, screenSize, &data));
+                sceneStack.back().Init();
+            } else {
+                running = false;
+            }
         }
         EndDrawing();
     }

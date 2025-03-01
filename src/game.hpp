@@ -12,10 +12,11 @@
 
 GameConfig CreateConfig();
 
-enum State { None, InGame, Menu };
+enum State { None, InGame, Menu, Quit };
 
 class Game {
     Sprites::RenderData* renderData;
+    State nextState = None;
 public:
     State state;
     Fader fader;
@@ -41,6 +42,7 @@ public:
 private:
     void ProcessProjectiles(float dt);
     void GameUI(float dt);
+    void GameBackground();
     static void SpawnRandomEnemy(Game* game, Vector2 position);
     static void SpawnRandomFamiliar(Game* game, Vector2 position);
 };

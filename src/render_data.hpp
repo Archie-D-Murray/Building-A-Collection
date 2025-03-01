@@ -46,6 +46,8 @@ namespace Sprites {
         EnemyProjectile1,
         HealthBarOverlay,
         HealthBarBackground,
+        GroundTile,
+        Lamp,
         Count 
     };
     const static float SPRITE_SIZE = 16.0f;
@@ -99,9 +101,16 @@ namespace Sprites {
             // UI                                                                                                                        \\
             //---------------------------------------------------------------------------------------------------------------------------\\
 
-            [HealthBarOverlay]     = CreateSprite({ 0 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
-            [HealthBarBackground]  = CreateSprite({ 6 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
-        };
+            [HealthBarOverlay]      = CreateSprite({ 0 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
+            [HealthBarBackground]   = CreateSprite({ 6 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
+
+            //---------------------------------------------------------------------------------------------------------------------------\\
+            // Background                                                                                                                \\
+            //---------------------------------------------------------------------------------------------------------------------------\\
+
+            [GroundTile]            = CreateSprite({ 0 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 }),
+            [Lamp]                  = CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
+    };
     public:
         RenderData(const char* atlasFileName, const char* fontFileName) {
             atlas = LoadTexture(atlasFileName);
