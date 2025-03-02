@@ -33,6 +33,6 @@ public:
     void Update(float dt);
     void Render(Sprites::RenderData* data);
     bool OffScreen(Game* game);
-    void PushVFX(Game* game);
+    void PushVFX(Game* game, const Vector2& position);
     void AddVFX(float duration, std::vector<Sprites::SpriteID> frames);
 };

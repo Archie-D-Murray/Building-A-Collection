@@ -19,14 +19,17 @@ void HeavyEnemy::Init(Game* game) {
 
 void HeavyEnemy::Update(float dt, Player& player) {
     velocity = Vector2ClampValue(targetPos - position, 0.0f, speed * dt);
-    position += velocity;
+    if (attackTimer >= 0.0f) {
+        attackTimer -= dt;
+    }
     if (attackTimer <= 0.0f && CheckCollisionCircles(player.position, player.collisionRadius, position, collisionRadius)) {
         player.GetHealth().Damage(damage);
         attackTimer += attackTime;
-    } else if (attackTimer >= 0.0f) {
-        attackTimer -= dt;
+    } else if (!CheckCollisionCircles(player.position, player.collisionRadius, position, range * 2)) {
+        velocity = Vector2ClampValue(player.position - position, 0.0f, speed * dt);
     }
     animator.Update(dt);
+    position += velocity;
 }
 
 void HeavyEnemy::Render(Sprites::RenderData* data) {

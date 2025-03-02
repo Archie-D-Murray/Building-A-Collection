@@ -30,7 +30,7 @@ void Projectile::Render(Sprites::RenderData* data) {
     data->DrawSprite(animator.GetSprite(), position, angle);
 }
 
-void Projectile::PushVFX(Game* game) {
+void Projectile::PushVFX(Game* game, const Vector2& position) {
     if (data.hasVFX) {
         game->visualEffects.push_back(VisualEffect(position, data.duration, data.frames));
         data.hasVFX = false;

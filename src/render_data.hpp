@@ -29,6 +29,7 @@ namespace Sprites {
         WaterFamiliarEgg,
         EarthFamiliarEgg,
         LightningFamiliarEgg,
+        FamiliarEggIndicator,
         FireProjectile0,
         FireProjectile1,
         WaterProjectile0,
@@ -111,6 +112,7 @@ namespace Sprites {
             [LightningVisual1]      = CreateSprite({  6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
             [LightningVisual2]      = CreateSprite({  8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
             [FamiliarOutline]       = CreateSprite({ 10 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            [FamiliarEggIndicator]  = CreateSprite({  0 * SPRITE_SIZE, 11 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
 
             //---------------------------------------------------------------------------------------------------------------------------\\
             // UI                                                                                                                        \\
@@ -200,11 +202,11 @@ namespace Sprites {
             UnloadFont(font);
         }
 
-        std::string RectToString(const Rectangle& rectangle) {
+        std::string static RectToString(const Rectangle& rectangle) {
             return TextFormat("x: %.0f, y: %.0f, width: %.0f, height: %.0f", rectangle.x, rectangle.y, rectangle.width, rectangle.height);
         }
 
-        std::string VectorToString(const Vector2& vector) {
+        std::string static VectorToString(const Vector2& vector) {
             return TextFormat("x: %.0f, y: %.0f", vector.x, vector.y);
         }
 

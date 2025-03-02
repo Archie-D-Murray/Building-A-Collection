@@ -153,9 +153,18 @@ void Game::GameBackground() {
     DrawTextureV(renderData->WorldMask(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
 };
 
+Vector2 ClosestPointOnRectangle(Vector2 point, Rectangle rect, float padding) {
+    Vector2 min = {rect.x + padding, rect.y + padding};
+    Vector2 max = {rect.x + rect.width - padding, rect.y + rect.height - padding};
+
+    return Vector2Clamp(point, min, max);
+}
+
 State Game::Update(float dt) {
     if (state == InGame) {
-        BeginMode2D(Camera2D{ .offset = screenSize * 0.5f, .target = player.position, .zoom = zoom });
+        Camera2D camera = { .offset = screenSize * 0.5f, .target = player.position, .zoom = zoom };
+        Rectangle screenRect = { camera.target.x - screenSize.x / (2.0f * zoom), camera.target.y - screenSize.y / (2.0f * zoom), screenSize.x / zoom, screenSize.y / zoom };
+        BeginMode2D(camera);
         GameBackground();
         player.Update(this, dt);
         for (size_t i = 0; i < familiarEggs.size();) {
@@ -164,7 +173,11 @@ State Game::Update(float dt) {
                 familiarEggs[i] = familiarEggs.back();
                 familiarEggs.pop_back();
             } else {
-                familiarEggs[i].Render(renderData);
+                if (CheckCollisionCircleRec(familiarEggs[i].position, familiarEggs[i].collisionRadius, screenRect)) {
+                    familiarEggs[i].Render(renderData);
+                } else {
+                    renderData->DrawSprite(Sprites::FamiliarEggIndicator, ClosestPointOnRectangle(familiarEggs[i].position, screenRect, familiarEggs[i].collisionRadius * 0.5f));
+                }
                 i++;
             }
         }
@@ -202,6 +215,7 @@ State Game::Update(float dt) {
         damageNumberManager.Update(dt);
         damageNumberManager.Render(renderData);
         EndMode2D();
+        DrawText(TextFormat("Screen rect: %s", Sprites::RenderData::RectToString(screenRect).c_str()), 10, 100, 10, WHITE);
         GameUI(dt);
         if (player.GetHealth().IsDead()) {
             fader.StartFade(false);
