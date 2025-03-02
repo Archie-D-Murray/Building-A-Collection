@@ -31,7 +31,7 @@ public:
     float attackTime = 1.0f;
     
     virtual void Init(Game* game) = 0;
-    virtual void Update(float dt, Player& player) = 0;
+    virtual void Update(float dt, Game* game) = 0;
     virtual void Render(Sprites::RenderData* data) = 0;
     virtual void Destroy(Game* game) = 0;
     virtual void Fire(Game* game) = 0;

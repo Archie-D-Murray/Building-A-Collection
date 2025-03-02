@@ -20,7 +20,7 @@ GameConfig CreateConfig() {
             .move = { Sprites::Player0, Sprites::Player1, Sprites::Player2 },
         },
         .enemyStats = {
-            [Normal] = EnemyStats {
+            ENUM_INDEX(Normal) EnemyStats {
                .health = 25.0f,
                .damage = 5.0f,
                .projectileSpeed = 125.0f,
@@ -30,7 +30,7 @@ GameConfig CreateConfig() {
                .sprites = { Sprites::NormalTypeEnemy0, Sprites::NormalTypeEnemy1, Sprites::NormalTypeEnemy2 },
                .projectileSprites = { Sprites::EnemyProjectile0, Sprites::EnemyProjectile1 },
             },
-            [Heavy] = EnemyStats {
+            ENUM_INDEX(Heavy) EnemyStats {
                .health = 50.0f,
                .damage = 15.0f,
                .projectileSpeed = 0.0f,
@@ -42,7 +42,7 @@ GameConfig CreateConfig() {
             }
         },
         .familiarStats = {
-            [Fire] = FamiliarStats {
+            ENUM_INDEX(Fire) FamiliarStats {
                 .damage = 30.0f,
                 .effectMagnitude = 3.0f,
                 .effectDuration = 2.0f,
@@ -56,7 +56,7 @@ GameConfig CreateConfig() {
                 .projectileSprites = { Sprites::FireProjectile0, Sprites::FireProjectile1 },
                 .sprites = { Sprites::FireFamiliar0, Sprites::FireFamiliar1, Sprites::FireFamiliar2 },
             },
-            [Water] = FamiliarStats {
+            ENUM_INDEX(Water) FamiliarStats {
                 .damage = 10.0f,
                 .effectMagnitude = 0.6f,
                 .effectDuration = 2.0f,
@@ -71,7 +71,7 @@ GameConfig CreateConfig() {
                 .projectileSprites = { Sprites::WaterProjectile0, Sprites::WaterProjectile1 },
                 .sprites = { Sprites::WaterFamiliar0, Sprites::WaterFamiliar1, Sprites::WaterFamiliar2 },
             },
-            [Earth] = FamiliarStats {
+            ENUM_INDEX(Earth) FamiliarStats {
                 .damage = 100.0f,
                 .effectMagnitude = 0.0f,
                 .effectDuration = 2.0f,
@@ -88,7 +88,7 @@ GameConfig CreateConfig() {
                 .sprites = { Sprites::EarthFamiliar0, Sprites::EarthFamiliar1, Sprites::EarthFamiliar2 },
                 .visualEffectSprites = { Sprites::EarthVisual },
             },
-            [Lightning] = FamiliarStats {
+            ENUM_INDEX(Lightning) FamiliarStats {
                 .damage = 25.0f,
                 .effectMagnitude = 0.0f,
                 .effectDuration = 0.5f,
@@ -190,7 +190,7 @@ State Game::Update(float dt) {
             }
         }
         for (Enemy* enemy : enemies) {
-            enemy->Update(dt, player);
+            enemy->Update(dt, this);
             if (enemy->CanFire(player)) {
                 enemy->Fire(this);
             }

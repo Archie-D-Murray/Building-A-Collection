@@ -18,8 +18,8 @@ void NormalEnemy::Init(Game* game) {
     animator.SetAnimations(Idle, game->config.enemyStats[Normal].sprites);
 }
 
-void NormalEnemy::Update(float dt, Player& player) {
-    velocity = Vector2ClampValue(player.position - position, 0.0f, speed * dt);
+void NormalEnemy::Update(float dt, Game* game) {
+    velocity = Vector2ClampValue(game->player.position - position, 0.0f, speed * dt);
     position += velocity;
     if (attackTimer > 0.0f) {
         attackTimer -= dt;

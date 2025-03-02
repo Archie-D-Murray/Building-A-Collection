@@ -31,5 +31,7 @@ public:
     Health& GetHealth() { return health; };
     bool Collides(Projectile* projectile);
     void Damage(Game* game, Projectile* projectile);
+    void Damage(Game* game, float damage);
     bool IsStunned() { return effectable.stunned; };
+    void FamiliarDamage(Game* game);
 };

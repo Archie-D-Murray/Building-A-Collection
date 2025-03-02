@@ -3,6 +3,12 @@
 #include "raymath.h"
 #include <string>
 
+#if 0
+#define ENUM_INDEX(value) [value] = 
+#else
+#define ENUM_INDEX(value) 
+#endif
+
 namespace Sprites {
     struct Sprite {
         Rectangle spriteRect;
@@ -12,7 +18,6 @@ namespace Sprites {
         Player0,
         Player1,
         Player2,
-        FamiliarOutline,
         FireFamiliar0,
         FireFamiliar1,
         FireFamiliar2,
@@ -29,7 +34,6 @@ namespace Sprites {
         WaterFamiliarEgg,
         EarthFamiliarEgg,
         LightningFamiliarEgg,
-        FamiliarEggIndicator,
         FireProjectile0,
         FireProjectile1,
         WaterProjectile0,
@@ -38,10 +42,6 @@ namespace Sprites {
         EarthProjectile1,
         LightningProjectile0,
         LightningProjectile1,
-        EarthVisual,
-        LightningVisual0,
-        LightningVisual1,
-        LightningVisual2,
         NormalTypeEnemy0,
         NormalTypeEnemy1,
         NormalTypeEnemy2,
@@ -50,6 +50,12 @@ namespace Sprites {
         HeavyTypeEnemy2,
         EnemyProjectile0,
         EnemyProjectile1,
+        EarthVisual,
+        LightningVisual0,
+        LightningVisual1,
+        LightningVisual2,
+        FamiliarOutline,
+        FamiliarEggIndicator,
         HealthBarOverlay,
         HealthBarBackground,
         Lamp,
@@ -67,65 +73,65 @@ namespace Sprites {
         Color hoverTint = { 0xA8, 0xA8, 0xA8, 0xA8 };
 
         const Sprite sprites[SpriteID::Count] = {
-            [Player0]               = CreateSprite({ 0 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [Player1]               = CreateSprite({ 0 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [Player2]               = CreateSprite({ 0 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [FireFamiliar0]         = CreateSprite({ 1 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [FireFamiliar1]         = CreateSprite({ 1 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [FireFamiliar2]         = CreateSprite({ 1 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [WaterFamiliar0]        = CreateSprite({ 2 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [WaterFamiliar1]        = CreateSprite({ 2 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [WaterFamiliar2]        = CreateSprite({ 2 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EarthFamiliar0]        = CreateSprite({ 3 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EarthFamiliar1]        = CreateSprite({ 3 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EarthFamiliar2]        = CreateSprite({ 3 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [LightningFamiliar0]    = CreateSprite({ 4 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [LightningFamiliar1]    = CreateSprite({ 4 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [LightningFamiliar2]    = CreateSprite({ 4 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [FireFamiliarEgg]       = CreateSprite({ 5 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [WaterFamiliarEgg]      = CreateSprite({ 6 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EarthFamiliarEgg]      = CreateSprite({ 7 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [LightningFamiliarEgg]  = CreateSprite({ 8 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [FireProjectile0]       = CreateSprite({ 5 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [FireProjectile1]       = CreateSprite({ 5 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [WaterProjectile0]      = CreateSprite({ 6 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [WaterProjectile1]      = CreateSprite({ 6 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EarthProjectile0]      = CreateSprite({ 7 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EarthProjectile1]      = CreateSprite({ 7 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [LightningProjectile0]  = CreateSprite({ 8 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [LightningProjectile1]  = CreateSprite({ 8 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [NormalTypeEnemy0]      = CreateSprite({ 9 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [NormalTypeEnemy1]      = CreateSprite({ 9 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [NormalTypeEnemy2]      = CreateSprite({ 9 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [HeavyTypeEnemy0]       = CreateSprite({10 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [HeavyTypeEnemy1]       = CreateSprite({10 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [HeavyTypeEnemy2]       = CreateSprite({10 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EnemyProjectile0]      = CreateSprite({11 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
-            [EnemyProjectile1]      = CreateSprite({11 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(Player0)                CreateSprite({ 0 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(Player1)                CreateSprite({ 0 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(Player2)                CreateSprite({ 0 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(FireFamiliar0)          CreateSprite({ 1 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(FireFamiliar1)          CreateSprite({ 1 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(FireFamiliar2)          CreateSprite({ 1 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(WaterFamiliar0)         CreateSprite({ 2 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(WaterFamiliar1)         CreateSprite({ 2 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(WaterFamiliar2)         CreateSprite({ 2 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EarthFamiliar0)         CreateSprite({ 3 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EarthFamiliar1)         CreateSprite({ 3 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EarthFamiliar2)         CreateSprite({ 3 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(LightningFamiliar0)     CreateSprite({ 4 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(LightningFamiliar1)     CreateSprite({ 4 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(LightningFamiliar2)     CreateSprite({ 4 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(FireFamiliarEgg)        CreateSprite({ 5 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(WaterFamiliarEgg)       CreateSprite({ 6 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EarthFamiliarEgg)       CreateSprite({ 7 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(LightningFamiliarEgg)   CreateSprite({ 8 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(FireProjectile0)        CreateSprite({ 5 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(FireProjectile1)        CreateSprite({ 5 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(WaterProjectile0)       CreateSprite({ 6 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(WaterProjectile1)       CreateSprite({ 6 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EarthProjectile0)       CreateSprite({ 7 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EarthProjectile1)       CreateSprite({ 7 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(LightningProjectile0)   CreateSprite({ 8 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(LightningProjectile1)   CreateSprite({ 8 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(NormalTypeEnemy0)       CreateSprite({ 9 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(NormalTypeEnemy1)       CreateSprite({ 9 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(NormalTypeEnemy2)       CreateSprite({ 9 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(HeavyTypeEnemy0)        CreateSprite({10 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(HeavyTypeEnemy1)        CreateSprite({10 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(HeavyTypeEnemy2)        CreateSprite({10 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EnemyProjectile0)       CreateSprite({11 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
+            ENUM_INDEX(EnemyProjectile1)       CreateSprite({11 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
 
-            //---------------------------------------------------------------------------------------------------------------------------\\
-            // Visual Effect                                                                                                             \\
-            //---------------------------------------------------------------------------------------------------------------------------\\
+            //--------------------------------------------------------------------------------------------------------------------------\\
+            // Visual Effect                                                                                                            \\
+            //--------------------------------------------------------------------------------------------------------------------------\\
 
-            [EarthVisual]           = CreateSprite({  1 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
-            [LightningVisual0]      = CreateSprite({  4 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
-            [LightningVisual1]      = CreateSprite({  6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
-            [LightningVisual2]      = CreateSprite({  8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
-            [FamiliarOutline]       = CreateSprite({ 10 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
-            [FamiliarEggIndicator]  = CreateSprite({  0 * SPRITE_SIZE, 11 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(EarthVisual)            CreateSprite({  1 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            ENUM_INDEX(LightningVisual0)       CreateSprite({  4 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            ENUM_INDEX(LightningVisual1)       CreateSprite({  6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            ENUM_INDEX(LightningVisual2)       CreateSprite({  8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            ENUM_INDEX(FamiliarOutline)        CreateSprite({ 10 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            ENUM_INDEX(FamiliarEggIndicator)   CreateSprite({  0 * SPRITE_SIZE, 11 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
 
-            //---------------------------------------------------------------------------------------------------------------------------\\
-            // UI                                                                                                                        \\
-            //---------------------------------------------------------------------------------------------------------------------------\\
+            //--------------------------------------------------------------------------------------------------------------------------\\
+            // UI                                                                                                                       \\
+            //--------------------------------------------------------------------------------------------------------------------------\\
 
-            [HealthBarOverlay]      = CreateSprite({ 0 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
-            [HealthBarBackground]   = CreateSprite({ 6 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
+            ENUM_INDEX(HealthBarOverlay)       CreateSprite({ 0 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
+            ENUM_INDEX(HealthBarBackground)    CreateSprite({ 6 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
 
-            //---------------------------------------------------------------------------------------------------------------------------\\
-            // Background                                                                                                                \\
-            //---------------------------------------------------------------------------------------------------------------------------\\
+            //--------------------------------------------------------------------------------------------------------------------------\\
+            // Background                                                                                                               \\
+            //--------------------------------------------------------------------------------------------------------------------------\\
 
-            [Lamp]                  = CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
+            ENUM_INDEX(Lamp)                   CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
     };
     public:
         RenderData(const char* atlasFileName, const char* fontFileName, const char* maskFileName) {

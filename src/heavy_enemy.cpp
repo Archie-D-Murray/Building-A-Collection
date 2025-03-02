@@ -17,18 +17,20 @@ void HeavyEnemy::Init(Game* game) {
     animator.SetAnimations(Idle, game->config.enemyStats[Heavy].sprites);
 }
 
-void HeavyEnemy::Update(float dt, Player& player) {
-    velocity = Vector2ClampValue(targetPos - position, 0.0f, speed * dt);
+void HeavyEnemy::Update(float dt, Game* game) {
     if (attackTimer >= 0.0f) {
         attackTimer -= dt;
     }
-    if (attackTimer <= 0.0f && CheckCollisionCircles(player.position, player.collisionRadius, position, collisionRadius)) {
-        player.GetHealth().Damage(damage);
-        attackTimer += attackTime;
-    } else if (!CheckCollisionCircles(player.position, player.collisionRadius, position, range * 2)) {
-        velocity = Vector2ClampValue(player.position - position, 0.0f, speed * dt);
+    if (dashTimer >= 0.0f) {
+        dashTimer -= dt;
+        velocity = dashDir * speed * dt;
+        if (CheckCollisionCircles(game->player.position, game->player.collisionRadius, position, collisionRadius) && attackTimer <= 0.0f) {
+            game->player.Damage(game, damage);
+            attackTimer += attackTime;
+        }
+    } else {
+        velocity = { 0 };
     }
-    animator.Update(dt);
     position += velocity;
 }
 
@@ -37,11 +39,12 @@ void HeavyEnemy::Render(Sprites::RenderData* data) {
 }
 
 void HeavyEnemy::Fire(Game* game) {
-    targetPos = game->player.position + Vector2Rotate( { 0, range }, (float) GetRandomValue(0, 360));
+    dashDir = Vector2Normalize(game->player.position - position);
+    dashTimer = dashTime;
 }
 
 bool HeavyEnemy::CanFire(const Player& player) {
-    return Vector2DistanceSqr(position, targetPos) <= 10.0f;
+    return Vector2Distance(position, player.position) <= targetRange && dashTimer <= 0.0f;
 }
 
 void HeavyEnemy::Destroy(Game* game) {

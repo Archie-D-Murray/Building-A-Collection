@@ -9,17 +9,17 @@
 #include "render_data.hpp"
 
 const float DAMAGE_MODIFIERS[TierCount] = {
-    [Common]   = 1.0f,
-    [Uncommon] = 1.25f,
-    [Rare]     = 1.5f,
-    [Epic]     = 2.0f
+    ENUM_INDEX(Common)    1.0f,
+    ENUM_INDEX(Uncommon)  1.25f,
+    ENUM_INDEX(Rare)      1.5f,
+    ENUM_INDEX(Epic)      2.0f
 };
 
 const float FIRE_RATE_MODIFIERS[TierCount] = {
-    [Common]   = 1.0f,
-    [Uncommon] = 0.8f,
-    [Rare]     = 1.6f,
-    [Epic]     = 0.4f,
+    ENUM_INDEX(Common)    1.0f,
+    ENUM_INDEX(Uncommon)  0.8f,
+    ENUM_INDEX(Rare)      1.6f,
+    ENUM_INDEX(Epic)      0.4f,
 };
 
 Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config) : position(position) {

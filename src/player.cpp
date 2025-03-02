@@ -82,6 +82,16 @@ void Player::Damage(Game* game, Projectile* projectile) {
     for (Effect& effect : projectile->effects) {
         effectable.AcceptEffect(effect);
     }
+    FamiliarDamage(game);
+}
+
+void Player::Damage(Game* game, float damage) {
+    health.Damage(damage);
+    game->damageNumberManager.PushDamageNumber(damage, position);
+    FamiliarDamage(game);
+}
+
+void Player::FamiliarDamage(Game* game) {
     if (game->familiars.empty()) {
         return;
     }

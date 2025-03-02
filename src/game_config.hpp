@@ -53,8 +53,8 @@ struct GameConfig {
 
 
 constexpr static Color tierColour[TierCount] = {
-    [Common] = WHITE,
-    [Uncommon] = GREEN,
-    [Rare] = BLUE,
-    [Epic] = PURPLE
+    ENUM_INDEX(Common)     WHITE,
+    ENUM_INDEX(Uncommon)   GREEN,
+    ENUM_INDEX(Rare)       BLUE,
+    ENUM_INDEX(Epic)       PURPLE
 };
