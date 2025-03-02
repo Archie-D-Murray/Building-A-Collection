@@ -59,3 +59,7 @@ void Spawner::Update(float dt, Game* game) {
     spawnCommand(game, spawnPoint);
     spawnTimer -= spawnCooldown;
 }
+
+void Spawner::DecreaseSpawnCooldown(float amount, float min) {
+    spawnCooldown = fmaxf(spawnCooldown - amount, min);
+}

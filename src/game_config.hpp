@@ -50,3 +50,11 @@ struct GameConfig {
     EnemyStats enemyStats[EnemyType::EnemyCount];
     FamiliarStats familiarStats[FamiliarType::FamiliarCount];
 };
+
+
+constexpr static Color tierColour[TierCount] = {
+    [Common] = WHITE,
+    [Uncommon] = GREEN,
+    [Rare] = BLUE,
+    [Epic] = PURPLE
+};

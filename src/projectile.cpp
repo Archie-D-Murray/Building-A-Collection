@@ -38,5 +38,5 @@ void Projectile::PushVFX(Game* game) {
 }
 
 bool Projectile::OffScreen(Game* game) {
-    return !CheckCollisionPointRec(position, Rectangle { 0, 0, game->screenSize.x, game->screenSize.y });
+    return Vector2Distance(position, game->screenSize * 0.5f) >= game->worldRadius - collisionRadius;
 }

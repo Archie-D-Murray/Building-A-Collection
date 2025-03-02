@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity_animator.hpp"
+#include "raylib.h"
 #include "render_data.hpp"
 #include "game_config.hpp"
 
@@ -26,7 +27,6 @@ public:
     Tier tier = Common;
 
     float damage;
-    float damageModifier = 1.0f;
     float effectMagnitude;
     float effectDuration;
     float effectTickRate;

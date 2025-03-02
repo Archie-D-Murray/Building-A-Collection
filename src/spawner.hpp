@@ -23,4 +23,5 @@ public:
     Spawner(Vector2 centre, Rectangle spawnArea, float spawnCooldown, Spawn spawnFunction);
     Spawner(Vector2 centre, float minSpawnRange, float maxSpawnRange, float spawnCooldown, Spawn spawnFunction);
     void Update(float dt, Game* game);
+    void DecreaseSpawnCooldown(float amount, float min);
 };

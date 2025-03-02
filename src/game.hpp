@@ -18,6 +18,7 @@ enum State { None, InGame, Menu, Quit };
 class Game {
     Sprites::RenderData* renderData;
     State nextState = None;
+    int spawnCount = 0;
 public:
     State state;
     Fader fader;

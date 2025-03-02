@@ -160,7 +160,7 @@ State Game::Update(float dt) {
         player.Update(this, dt);
         for (size_t i = 0; i < familiarEggs.size();) {
             if (CheckCollisionCircles(player.position, player.collisionRadius, familiarEggs[i].position, familiarEggs[i].collisionRadius)) {
-                player.AddFamiliar(this, familiarEggs[i].type, familiarEggs[i].tier);
+                player.AddFamiliar(this, familiarEggs[i].type);
                 familiarEggs[i] = familiarEggs.back();
                 familiarEggs.pop_back();
             } else {
@@ -299,18 +299,18 @@ void Game::ProcessProjectiles(float dt) {
 }
 
 void Game::SpawnRandomEnemy(Game* game, Vector2 position) {
-    if (game->enemies.empty()) {
-        game->enemies.push_back(dynamic_cast<Enemy*>(new NormalEnemy(game, position)));
-        return;
-    }
-    if (!game->enemies.empty() && game->enemies.size() % 10 == 0 && game->enemies.back()->type != Heavy) {
+    if (!game->enemies.empty() && game->spawnCount % 10 == 0) {
         game->enemies.push_back(dynamic_cast<Enemy*>(new HeavyEnemy(game, position)));
     } else {
         game->enemies.push_back(dynamic_cast<Enemy*>(new NormalEnemy(game, position)));
+    }
+    game->spawnCount++;
+    if (game->spawnCount % 25 == 0) {
+        game->enemySpawner.DecreaseSpawnCooldown(0.1f, 0.25f);
     }
 }
 
 void Game::SpawnRandomFamiliar(Game* game, Vector2 position) {
     TraceLog(LOG_INFO, "Spawned egg at (%.0f, %.0f)", position.x, position.y);
-    game->familiarEggs.push_back(FamiliarEgg(position, (FamiliarType)GetRandomValue(0, 3), (Tier)GetRandomValue(0, 4)));
+    game->familiarEggs.push_back(FamiliarEgg(position, (FamiliarType)GetRandomValue(0, 3)));
 }

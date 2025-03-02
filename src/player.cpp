@@ -18,7 +18,7 @@ void Player::Init(Game* game) {
     speed = game->config.playerStats.speed;
     collisionRadius = game->config.playerStats.collisionRadius;
     health = Health(game->config.playerStats.health);
-    AddFamiliar(game, Fire, Common);
+    AddFamiliar(game, Fire);
     effectable = Effectable();
     effectable.health = &health;
     TraceLog(LOG_INFO, "Player health: %.0f", health.CurrentHealth());
@@ -52,14 +52,14 @@ void Player::Render(Sprites::RenderData* data) {
     data->DrawSprite(animator.GetSprite(), position);
 }
 
-void Player::AddFamiliar(Game* game, FamiliarType type, Tier tier) {
+void Player::AddFamiliar(Game* game, FamiliarType type) {
     for (Familiar& familiar : game->familiars) {
         if (familiar.type == type && familiar.tier < Epic) {
             familiar.AdvanceTier();
             return;
         }
     }
-    game->familiars.push_back(Familiar(position, type, tier, game->config));
+    game->familiars.push_back(Familiar(position, type, Tier::Common, game->config));
 }
 
 void Player::Destroy() {

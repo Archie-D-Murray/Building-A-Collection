@@ -25,7 +25,7 @@ public:
     void Init(Game* game);
     void Update(Game* game, float dt);
     void Render(Sprites::RenderData* data);
-    void AddFamiliar(Game* game, FamiliarType type, Tier tier);
+    void AddFamiliar(Game* game, FamiliarType type);
     void Destroy();
     Vector2 Velocity() const;
     Health& GetHealth() { return health; };

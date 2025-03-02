@@ -9,10 +9,17 @@
 #include "render_data.hpp"
 
 const float DAMAGE_MODIFIERS[TierCount] = {
-    [Common] = 1.0f,
+    [Common]   = 1.0f,
     [Uncommon] = 1.25f,
-    [Rare] = 1.5f,
-    [Epic] = 2.0f
+    [Rare]     = 1.5f,
+    [Epic]     = 2.0f
+};
+
+const float FIRE_RATE_MODIFIERS[TierCount] = {
+    [Common]   = 1.0f,
+    [Uncommon] = 0.8f,
+    [Rare]     = 1.6f,
+    [Epic]     = 0.4f,
 };
 
 Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config) : position(position) {
@@ -49,7 +56,6 @@ void Familiar::AdvanceTier() {
         default:
             break;
     }
-    damageModifier = DAMAGE_MODIFIERS[tier];
 }
 
 void Familiar::DropTier() {
@@ -66,10 +72,10 @@ void Familiar::DropTier() {
         default:
             break;
     }
-    damageModifier = DAMAGE_MODIFIERS[tier];
 }
 
 void Familiar::Render(Sprites::RenderData* data) {
+    data->DrawSprite(Sprites::FamiliarOutline, position, 0.0f, tierColour[tier]);
     data->DrawSprite(animator.GetSprite(), position, 0.0f);
 }
 
@@ -94,14 +100,14 @@ Enemy* Familiar::GetTarget(Game* game) {
 }
 
 void Familiar::Attack(Game* game, Enemy* target) {
-    attackTimer += attackTime;
+    attackTimer += attackTime * FIRE_RATE_MODIFIERS[tier];
     game->familiarProjectiles.push_back(
         new Projectile(
             position, 
             Vector2Normalize(target->position + target->GetVelocity() - position),
             projectileSpeed, 
             projectileRadius, 
-            damage * damageModifier, 
+            damage * DAMAGE_MODIFIERS[tier], 
             game->config.familiarStats[type].projectileSprites
         )
     );

@@ -12,6 +12,7 @@ namespace Sprites {
         Player0,
         Player1,
         Player2,
+        FamiliarOutline,
         FireFamiliar0,
         FireFamiliar1,
         FireFamiliar2,
@@ -102,13 +103,14 @@ namespace Sprites {
             [EnemyProjectile1]      = CreateSprite({11 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
 
             //---------------------------------------------------------------------------------------------------------------------------\\
-            // Visual Effect                                                                                                                        \\
+            // Visual Effect                                                                                                             \\
             //---------------------------------------------------------------------------------------------------------------------------\\
 
-            [EarthVisual]           = CreateSprite({ 1 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
-            [LightningVisual0]      = CreateSprite({ 4 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
-            [LightningVisual1]      = CreateSprite({ 6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
-            [LightningVisual2]      = CreateSprite({ 8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, {SPRITE_SIZE, SPRITE_SIZE}),
+            [EarthVisual]           = CreateSprite({  1 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            [LightningVisual0]      = CreateSprite({  4 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            [LightningVisual1]      = CreateSprite({  6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            [LightningVisual2]      = CreateSprite({  8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            [FamiliarOutline]       = CreateSprite({ 10 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
 
             //---------------------------------------------------------------------------------------------------------------------------\\
             // UI                                                                                                                        \\
