@@ -6,7 +6,7 @@
 #include "raymath.h"
 #include "render_data.hpp"
 
-HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Heavy].health) {
+HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Heavy].health, game->difficulty) {
     effectable.health = &health;
     Init(game);
 }

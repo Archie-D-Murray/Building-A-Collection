@@ -66,7 +66,8 @@ namespace Sprites {
     class RenderData {
     private:
         Texture2D atlas;
-        Texture2D worldMask;
+        Texture2D world;
+        Image icon;
         Font font;
         NPatchInfo normal;
         NPatchInfo pressed;
@@ -134,11 +135,13 @@ namespace Sprites {
             ENUM_INDEX(Lamp)                   CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
     };
     public:
-        RenderData(const char* atlasFileName, const char* fontFileName, const char* maskFileName) {
+        RenderData(const char* atlasFileName, const char* fontFileName, const char* maskFileName, const char* iconFileName) {
             atlas = LoadTexture(atlasFileName);
-            worldMask = LoadTexture(maskFileName);
+            world = LoadTexture(maskFileName);
+            icon  = LoadImage(iconFileName);
+            SetWindowIcon(icon);
             SetTextureFilter(atlas, TEXTURE_FILTER_POINT);
-            SetTextureFilter(worldMask, TEXTURE_FILTER_POINT);
+            SetTextureFilter(world, TEXTURE_FILTER_POINT);
             font = LoadFont(fontFileName);
             normal = {
                 .source = { 0, 4 * SPRITE_SIZE, 6 * SPRITE_SIZE, 6 * SPRITE_SIZE },
@@ -165,8 +168,8 @@ namespace Sprites {
             return atlas;
         }
 
-        inline Texture2D& WorldMask() {
-            return worldMask;
+        inline Texture2D& World() {
+            return world;
         }
 
         inline Font& GetFont() {
@@ -205,6 +208,8 @@ namespace Sprites {
 
         void Unload() {
             UnloadTexture(atlas);
+            UnloadTexture(world);
+            UnloadImage(icon);
             UnloadFont(font);
         }
 

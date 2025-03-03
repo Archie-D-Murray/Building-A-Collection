@@ -116,7 +116,7 @@ Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data) :
     screenSize(screenSize), 
     scale(1080.0f / screenSize.y), 
     zoom(4.0f * 1080.0f / screenSize.y),
-    worldRadius(data->WorldMask().width * 0.5f),
+    worldRadius(data->World().width * 0.5f),
     player(this) 
 {
     if (state == InGame) {
@@ -146,11 +146,11 @@ void Game::GameUI(float dt) {
     const float healthBarXOffset = 12 + 3 * Sprites::SPRITE_SIZE;
     DrawRectangleRec(bar, red);
     renderData->DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
-    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], distance from centre: %.0f, dot: %.2f", player.position.x, player.position.y, Vector2Distance(player.position, screenSize * 0.5f), Vector2DotProduct(Vector2Normalize(screenSize * 0.5f - player.position), Vector2Normalize(player.Velocity()))), 10, 25, 14, WHITE);
+    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], distance from centre: %.0f, dot: %.2f", player.position.x, player.position.y, Vector2Distance(player.position, screenSize * 0.5f), Vector2DotProduct(Vector2Normalize(screenSize * 0.5f - player.position), Vector2Normalize(player.Velocity()))), 10, 35, 14, WHITE);
 }
 
 void Game::GameBackground() {
-    DrawTextureV(renderData->WorldMask(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
+    DrawTextureV(renderData->World(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
 };
 
 Vector2 ClosestPointOnRectangle(Vector2 point, Rectangle rect, float padding) {
@@ -321,6 +321,7 @@ void Game::SpawnRandomEnemy(Game* game, Vector2 position) {
     game->spawnCount++;
     if (game->spawnCount % 25 == 0) {
         game->enemySpawner.DecreaseSpawnCooldown(0.1f, 0.25f);
+        game->difficulty += 0.1f;
     }
 }
 

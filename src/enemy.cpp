@@ -6,9 +6,11 @@
 #include "game.hpp"
 #include "raymath.h"
 
-Enemy::Enemy(Vector2 position, float health) : 
+Enemy::Enemy(Vector2 position, float health, float difficulty) : 
     position(position),
-    health(health) { }
+    health(health * difficulty),
+    difficulty(difficulty)
+{}
 
 bool Enemy::CanFire(const Player& player) {
     return attackTimer <= 0.0f && Vector2DistanceSqr(player.position, position) <= range * range && !effectable.stunned;

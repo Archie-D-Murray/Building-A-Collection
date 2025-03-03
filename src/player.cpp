@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "entity_animator.hpp"
 #include "familiar.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -16,6 +17,7 @@ void Player::Init(Game* game) {
     position = game->screenSize * 0.5f;
     velocity = { 0 };
     speed = game->config.playerStats.speed;
+    dashSpeed = speed * 2.0f;
     collisionRadius = game->config.playerStats.collisionRadius;
     health = Health(game->config.playerStats.health);
     AddFamiliar(game, Fire);
@@ -35,14 +37,26 @@ void Player::Update(Game* game, float dt) {
         (float)(IsKeyDown(KEY_S) - IsKeyDown(KEY_W)),
     };
 
-    velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
-    animator.Play(Vector2LengthSqr(velocity) > 0.01f ? Move : Idle);
+    if (IsKeyPressed(KEY_SPACE) && dashTimer <= 0.0f && Vector2LengthSqr(input) > 0) {
+        dashTimer += dashCooldown;
+        dashDirection = Vector2Normalize(input);
+    }
+    if (dashTimer <= 0.0f) {
+        velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
+        animator.Play(Vector2LengthSqr(velocity) > 0.01f ? Move : Idle);
+    } else {
+        velocity = dashDirection * dashSpeed * dt;
+        dashTimer -= dt;
+        animator.Play(Move);
+    }
     animator.Update(dt);
     float distanceFromCenter = Vector2Length(position - game->screenSize * 0.5f);
     Vector2 dirFromWorld = Vector2Normalize(game->screenSize * 0.5f - position);
     if (distanceFromCenter >= game->worldRadius - collisionRadius && Vector2DotProduct(dirFromWorld, Vector2Normalize(velocity)) < 0.0f) {
         float angle = Vector2Angle(Vector2 { 0, 1 }, position - game->screenSize * 0.5f);
         position = game->screenSize * 0.5f + Vector2Rotate({ 0, game->worldRadius - collisionRadius }, angle);
+        // Cancel dash on wall hit
+        dashTimer = 0.0f;
     } else {
         position += velocity;
     }

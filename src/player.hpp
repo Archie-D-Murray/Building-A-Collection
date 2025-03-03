@@ -16,11 +16,15 @@ class Player {
     Health health;
     Effectable effectable;
     EntityAnimator animator;
+    float dashTimer = 0.0f;
+    Vector2 dashDirection;
 
 public:
     Player(Game* game);
     float collisionRadius;
     float familiarRotation;
+    float dashCooldown;
+    float dashSpeed;
     Vector2 position;
     void Init(Game* game);
     void Update(Game* game, float dt);

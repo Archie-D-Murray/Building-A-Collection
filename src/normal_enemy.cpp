@@ -4,14 +4,15 @@
 #include "projectile.hpp"
 #include "render_data.hpp"
 
-NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Normal].health) {
+NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Normal].health, game->difficulty) {
     effectable.health = &health;
     Init(game);
 }
 
 void NormalEnemy::Init(Game* game) {
     projectileSpeed = game->config.enemyStats[Normal].projectileSpeed;
-    speed = game->config.enemyStats[Normal].speed;
+    speed = game->config.enemyStats[Normal].speed * difficulty;
+    range *= difficulty;
     collisionRadius = game->config.enemyStats[Normal].collisionRadius;
     projectileRadius = game->config.enemyStats[Normal].projectileRadius;
     damage = game->config.enemyStats[Normal].damage;

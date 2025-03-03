@@ -13,13 +13,14 @@ class Projectile;
 
 class Enemy {
 protected:
-    Enemy(Vector2 position, float health);
+    Enemy(Vector2 position, float health, float difficulty);
     Vector2 velocity;
     Sprites::SpriteID sprite;
     float attackTimer = 0.0f;
     Health health;
     Effectable effectable;
     EntityAnimator animator;
+    float difficulty;
 public:
     Vector2 position;
     EnemyType type;
