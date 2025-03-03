@@ -6,9 +6,7 @@
 #include "raylib.h"
 #include "player.hpp"
 #include "raymath.h"
-#include "debug.h"
 #include "render_data.hpp"
-#include <cmath>
 
 const float DAMAGE_MODIFIERS[TierCount] = {
     ENUM_INDEX(Common)    1.0f,
@@ -24,23 +22,23 @@ const float FIRE_RATE_MODIFIERS[TierCount] = {
     ENUM_INDEX(Epic)      0.4f,
 };
 
-Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config) : position(position) {
-    Init(type, tier, config);
+Familiar::Familiar(Vector2 position, FamiliarType type, Tier tier, Game* game) : position(position) {
+    Init(type, tier, game);
 }
 
-void Familiar::Init(FamiliarType type, Tier tier, const GameConfig& config) {
+void Familiar::Init(FamiliarType type, Tier tier, Game* game) {
     this->type = type;
     this->tier = tier;
-    damage = config.familiarStats[type].damage;
-    effectMagnitude = config.familiarStats[type].effectMagnitude;
-    effectDuration = config.familiarStats[type].effectDuration;
-    effectTickRate = config.familiarStats[type].effectTickRate;
-    projectileRadius = config.familiarStats[type].projectileRadius;
-    projectileSpeed = config.familiarStats[type].projectileSpeed;
-    attackTime = config.familiarStats[type].attackTime;
-    attackRange = config.familiarStats[type].attackRange;
-    arcCount = config.familiarStats[type].arcCount;
-    animator.SetAnimations(Idle, config.familiarStats[type].sprites);
+    damage = game->config->familiarStats[type].damage;
+    effectMagnitude = game->config->familiarStats[type].effectMagnitude;
+    effectDuration = game->config->familiarStats[type].effectDuration;
+    effectTickRate = game->config->familiarStats[type].effectTickRate;
+    projectileRadius = game->config->familiarStats[type].projectileRadius;
+    projectileSpeed = game->config->familiarStats[type].projectileSpeed;
+    attackTime = game->config->familiarStats[type].attackTime;
+    attackRange = game->config->familiarStats[type].attackRange;
+    arcCount = game->config->familiarStats[type].arcCount;
+    animator.SetAnimations(Idle, game->config->familiarStats[type].sprites);
 }
 
 void Familiar::AdvanceTier() {
@@ -103,9 +101,9 @@ Enemy* Familiar::GetTarget(Game* game) {
 
 void Familiar::Attack(Game* game, Enemy* target) {
     attackTimer += attackTime * FIRE_RATE_MODIFIERS[tier];
-    if (projectileSpeed < 0 || isnanf(projectileSpeed) || isinf(projectileSpeed)) {
-        DebugTrap();
-    }
+    /*if (projectileSpeed < 0 || isnanf(projectileSpeed) || isinf(projectileSpeed)) {*/
+    /*    DebugTrap();*/
+    /*}*/
     game->familiarProjectiles.push_back(
         new Projectile(
             position, 
@@ -113,35 +111,35 @@ void Familiar::Attack(Game* game, Enemy* target) {
             projectileSpeed, 
             projectileRadius, 
             damage * DAMAGE_MODIFIERS[tier], 
-            game->config.familiarStats[type].projectileSprites
+            game->config->familiarStats[type].projectileSprites
         )
     );
     Projectile* projectile = game->familiarProjectiles.back();
     switch (type) {
     case Fire:
         projectile->effects.push_back(
-            Effect::CreateDoT(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectTickRate, game->config.familiarStats[type].effectDuration, OnFire)
+            Effect::CreateDoT(game->config->familiarStats[type].effectMagnitude, game->config->familiarStats[type].effectTickRate, game->config->familiarStats[type].effectDuration, OnFire)
         );
     case Water:
         projectile->type = Linear;
         projectile->effects.push_back(
-            Effect::CreateSlow(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectDuration, Iced)
+            Effect::CreateSlow(game->config->familiarStats[type].effectMagnitude, game->config->familiarStats[type].effectDuration, Iced)
         );
         break;
     case Earth:
         projectile->type = AoE;
         projectile->effects.push_back(
-            Effect::CreateStun(game->config.familiarStats[type].effectDuration, Grounded)
+            Effect::CreateStun(game->config->familiarStats[type].effectDuration, Grounded)
         );
-        projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
+        projectile->AddVFX(game->config->familiarStats[type].visualDuration, game->config->familiarStats[type].visualEffectSprites);
         break;
     case Lightning:
         projectile->chainCount = this->arcCount;
         projectile->type = Chain;
         projectile->effects.push_back(
-            Effect::CreateStun(game->config.familiarStats[type].effectDuration, Zapped)
+            Effect::CreateStun(game->config->familiarStats[type].effectDuration, Zapped)
         );
-        projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
+        projectile->AddVFX(game->config->familiarStats[type].visualDuration, game->config->familiarStats[type].visualEffectSprites);
         break;
     default:
         break;

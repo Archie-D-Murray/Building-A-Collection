@@ -6,19 +6,20 @@
 #include "raymath.h"
 #include "render_data.hpp"
 
-HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Heavy].health, game->difficulty) {
+HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->config->enemyStats[Heavy].health, game->difficulty) {
     effectable.health = &health;
     Init(game);
 }
 
 void HeavyEnemy::Init(Game* game) {
     effectable.Init(game);
-    speed = game->config.enemyStats[Heavy].speed;
-    collisionRadius = game->config.enemyStats[Heavy].collisionRadius;
-    animator.SetAnimations(Idle, game->config.enemyStats[Heavy].sprites);
+    speed = game->config->enemyStats[Heavy].speed;
+    collisionRadius = game->config->enemyStats[Heavy].collisionRadius;
+    animator.SetAnimations(Idle, game->config->enemyStats[Heavy].sprites);
 }
 
 void HeavyEnemy::Update(float dt, Game* game) {
+    effectable.Update(game, position, dt);
     if (effectable.stunned) {
         return;
     }

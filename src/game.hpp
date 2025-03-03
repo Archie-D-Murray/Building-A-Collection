@@ -36,12 +36,13 @@ public:
     Spawner enemySpawner;
     Spawner familiarSpawner;
     DamageNumberManager damageNumberManager;
-    const GameConfig config;
+    GameConfig* config;
     float zoom = 4.0f;
     float scale;
-    SoundManager soundManager;
+    float volume = 0.5f;
+    SoundManager* soundManager;
 
-    Game(State state, Vector2 screenSize, Sprites::RenderData* data);
+    Game(State state, Vector2 screenSize, Sprites::RenderData* data, GameConfig* config, SoundManager* soundManager);
     void Init();
     State Update(float dt);
     void Shutdown();

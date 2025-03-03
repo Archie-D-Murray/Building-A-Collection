@@ -1,18 +1,20 @@
 #include <cmath>
 #include "health.hpp"
+#include "game.hpp"
 
 Health::Health(float maxHealth) : 
     currentHealth(maxHealth),
     maxHealth(maxHealth)
 {}
 
-void Health::Damage(float amount) {
-    if (amount == 0.0f) {
+void Health::Damage(Game* game, float damage, Vector2 source) {
+    game->damageNumberManager.PushDamageNumber(damage, source);
+    if (damage == 0.0f) {
         return;
     }
-    if (amount >= currentHealth || currentHealth <= 0.0f) {
+    if (damage >= currentHealth || currentHealth <= 0.0f) {
         isDead = true;
         return;
     }
-    currentHealth -= fmax(amount, 0.0f);
+    currentHealth -= fmax(damage, 0.0f);
 }

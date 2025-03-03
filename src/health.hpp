@@ -1,6 +1,9 @@
 #pragma once
 
+#include "raylib.h"
 class Health;
+
+class Game;
 
 class Health {
 private:
@@ -15,6 +18,6 @@ public:
     inline float MaxHealth() { return maxHealth; };
     inline float PercentHealth() { return maxHealth == 0.0f ? 1.0f : currentHealth / maxHealth; };
 
-    void Damage(float amount);
+    void Damage(Game* game, float amount, Vector2 source);
     inline bool IsDead() { return isDead; };
 };

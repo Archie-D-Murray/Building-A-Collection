@@ -48,12 +48,12 @@ Effect Effect::CreateDoT(float magnitude, float tickRate, float duration, Animat
 }
 
 void Effectable::Init(Game* game) {
-    for (const ParticleSetting& particle : game->config.particleSettings) {
+    for (const ParticleSetting& particle : game->config->particleSettings) {
         animator.SetAnimations(particle.animation, particle.sprites);
     }
 }
 
-void Effectable::Update(float dt) {
+void Effectable::Update(Game* game, Vector2 position, float dt) {
     Animation animation;
     renderParticle = false;
     speedModifier = 1.0f;
@@ -98,7 +98,7 @@ void Effectable::Update(float dt) {
         effect->durationTimer += dt;
         effect->tickTimer += dt;
         if (effect->tickTimer >= effect->tickRate) {
-            health->Damage(effect->magnitude);
+            health->Damage(game, effect->magnitude, position);
             effect->tickTimer -= effect->tickRate;
         }
         if (effect->durationTimer >= effect->duration) {

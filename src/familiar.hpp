@@ -36,8 +36,8 @@ public:
     float attackRange;
     int arcCount;
 
-    Familiar(Vector2 position, FamiliarType type, Tier tier, const GameConfig& config);
-    void Init(FamiliarType type, Tier tier, const GameConfig& config);
+    Familiar(Vector2 position, FamiliarType type, Tier tier, Game* game);
+    void Init(FamiliarType type, Tier tier, Game* game);
     void Update(float dt, const Player& player, float offset);
     void Render(Sprites::RenderData* data);
     void AdvanceTier();

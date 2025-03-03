@@ -42,4 +42,5 @@ public:
     bool IsStunned() { return effectable.stunned; };
     void FamiliarDamage(Game* game);
     bool IsVulnerable();
+    void PlayHitSFX(Game* game);
 };

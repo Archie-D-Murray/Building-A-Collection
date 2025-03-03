@@ -35,6 +35,6 @@ public:
 
     void Init(Game* game);
     void AcceptEffect(Effect effect);
-    void Update(float dt);
+    void Update(Game* game, Vector2 position, float dt);
     void Render(Sprites::RenderData* data, Vector2 position);
 };

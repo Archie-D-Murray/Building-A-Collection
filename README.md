@@ -36,3 +36,27 @@ after downloading the library you should have the following directory structure:
     .\build_cl.bat
     ```
 
+## Third Party Assets:
+#### SFX
+ - Skull Enemy Hit - https://pixabay.com/sound-effects/metal-hit-cartoon-7118/
+ - Skull Enemy Death - https://pixabay.com/sound-effects/rock-break-183794/
+ - Player Hit, Bat Enemy Hit, Both Death (cut from) - https://pixabay.com/sound-effects/three-flesh-impacts-82553/
+ - UI Click - https://pixabay.com/sound-effects/ui-click-43196/
+ - UI Hover - https://pixabay.com/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/
+#### BGM
+The background audio tracks were compressed to be normalised but are otherwise unchanged
+ - Combat: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Stay%20the%20Course.mp3
+   ```md
+   "Stay the Course" Kevin MacLeod (incompetech.com)
+   Licensed under Creative Commons: By Attribution 4.0 License
+   http://creativecommons.org/licenses/by/4.0/   ```
+
+ - Passive: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Floating%20Cities.mp3
+   ```md
+   "Floating Cities" Kevin MacLeod (incompetech.com)
+   Licensed under Creative Commons: By Attribution 4.0 License
+   http://creativecommons.org/licenses/by/4.0/
+   ```
+
+#### Font
+Alagard font: https://www.dafont.com/alagard.font

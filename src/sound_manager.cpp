@@ -3,12 +3,15 @@
 SoundManager::SoundManager(std::vector<SFXFile> sfxFiles, std::vector<BGMFile> bgmFiles) {
     for (SFXFile& sfxFile : sfxFiles) {
         sfx[sfxFile.type] = LoadSound(sfxFile.file);
+        SetSoundVolume(sfx[sfxFile.type], globalVolume);
     }
     for (BGMFile& bgmFile : bgmFiles) {
         bgm[bgmFile.type] = LoadMusicStream(bgmFile.file);
     }
+    globalVolume = 1.0f;
 }
 void SoundManager::PlaySFX(SFXType type) {
+    SetSoundPitch(sfx[type], (float) GetRandomValue(45, 55) * 0.01f);
     PlaySound(sfx[type]);
 }
 void SoundManager::PlayBGM(BGMType type) {
@@ -32,13 +35,13 @@ void SoundManager::Update(float dt) {
     if (target != current) {
         mixTimer += dt;
         if (current != BGMNone) {
-            SetMusicVolume(bgm[current], Clamp(1.0f - mixTimer / mixTime, 0.0f, 1.0f));
+            SetMusicVolume(bgm[current], Clamp(1.0f - mixTimer / mixTime, 0.0f, 1.0f) * globalVolume);
         }
         if (target != BGMNone) {
             if (!IsMusicStreamPlaying(bgm[target])) {
                 PlayMusicStream(bgm[target]);
             }
-            SetMusicVolume(bgm[target], Clamp(mixTimer / mixTime, 0.0f, 1.0f));
+            SetMusicVolume(bgm[target], Clamp(mixTimer / mixTime, 0.0f, 1.0f) * globalVolume);
         }
         if (mixTimer >= mixTime) {
             StopMusicStream(bgm[current]);
@@ -47,4 +50,13 @@ void SoundManager::Update(float dt) {
             }
         }
     }   
+}
+
+SoundManager::~SoundManager() {
+    for (size_t i = SFXNone + 1; i < (size_t) SFXCount; i++) {
+        UnloadSound(sfx[i]);
+    }
+    for (size_t i = BGMNone + 1; i < (size_t) BGMCount; i++) {
+        UnloadMusicStream(bgm[i]);
+    }
 }

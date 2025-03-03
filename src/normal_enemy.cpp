@@ -5,24 +5,24 @@
 #include "raylib.h"
 #include "render_data.hpp"
 
-NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Normal].health, game->difficulty) {
+NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->config->enemyStats[Normal].health, game->difficulty) {
     effectable.health = &health;
     Init(game);
 }
 
 void NormalEnemy::Init(Game* game) {
     effectable.Init(game);
-    projectileSpeed = game->config.enemyStats[Normal].projectileSpeed;
-    speed = game->config.enemyStats[Normal].speed * difficulty;
+    projectileSpeed = game->config->enemyStats[Normal].projectileSpeed;
+    speed = game->config->enemyStats[Normal].speed * difficulty;
     range *= difficulty;
-    collisionRadius = game->config.enemyStats[Normal].collisionRadius;
-    projectileRadius = game->config.enemyStats[Normal].projectileRadius;
-    damage = game->config.enemyStats[Normal].damage;
-    animator.SetAnimations(Idle, game->config.enemyStats[Normal].sprites);
+    collisionRadius = game->config->enemyStats[Normal].collisionRadius;
+    projectileRadius = game->config->enemyStats[Normal].projectileRadius;
+    damage = game->config->enemyStats[Normal].damage;
+    animator.SetAnimations(Idle, game->config->enemyStats[Normal].sprites);
 }
 
 void NormalEnemy::Update(float dt, Game* game) {
-    effectable.Update(dt);
+    effectable.Update(game, position, dt);
     if (effectable.stunned) {
         return;
     }
@@ -47,7 +47,7 @@ void NormalEnemy::Fire(Game* game) {
             projectileSpeed, 
             projectileRadius, 
             damage, 
-            game->config.enemyStats[Normal].projectileSprites
+            game->config->enemyStats[Normal].projectileSprites
         )
     );
     attackTimer += attackTime;

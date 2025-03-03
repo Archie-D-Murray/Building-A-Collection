@@ -27,11 +27,13 @@ bool CapFPS(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
     bool capFPS = CapFPS(argc, argv);
     InitWindow(0, 0, "Making a Collection");
-    Sprites::RenderData data = Sprites::RenderData("./atlas.png", "./Alagard.ttf", "./world_mask.png", "./icon.png");
-    Vector2 screenSize = SetWindowDefaults(capFPS);
     InitAudioDevice();
+    Sprites::RenderData data = Sprites::RenderData("./assets/sprites/atlas.png", "./assets/font/Alagard.ttf", "./assets/sprites/world_mask.png", "./assets/sprites/icon.png");
+    GameConfig config = CreateConfig();
+    Vector2 screenSize = SetWindowDefaults(capFPS);
+    SoundManager soundManager = SoundManager(config.soundSettings.sfxFiles, config.soundSettings.bgmFiles);
     std::vector<Game> sceneStack;
-    sceneStack.push_back(Game(Menu, screenSize, &data));
+    sceneStack.push_back(Game(Menu, screenSize, &data, &config, &soundManager));
     sceneStack.back().Init();
 
     bool running = true;
@@ -46,7 +48,7 @@ int main(int argc, char* argv[]) {
                 TraceLog(LOG_INFO, "Switching scene");
                 sceneStack.back().Shutdown();
                 sceneStack.pop_back();
-                sceneStack.push_back(Game(newState, screenSize, &data));
+                sceneStack.push_back(Game(newState, screenSize, &data, &config, &soundManager));
                 sceneStack.back().Init();
             } else {
                 running = false;

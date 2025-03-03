@@ -5,15 +5,17 @@ class SoundManager {
     Sound sfx[SFXCount];
     Music bgm[BGMCount];
 
-    BGMType current;
-    BGMType target;
+    BGMType current = BGMNone;
+    BGMType target = BGMNone;
     float mixTime = 2.0f;
-    float mixTimer;
+    float mixTimer = 0.0f;
     float combatTimer = 0.0f;
     float combatTime = 5.0f;
 
 public:
+    float globalVolume = 0.5f;
     SoundManager(std::vector<SFXFile> sfx, std::vector<BGMFile> bgm);
+    ~SoundManager();
     void PlaySFX(SFXType type);
     void PlayBGM(BGMType type);
     void ContinueCombatMusic();
