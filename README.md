@@ -11,6 +11,9 @@ Space to jump
 ![Demo](./share/Demo.png)
 
 ## Building From Source:
+Due to developing on different platforms, the raylib library must be downloaded separatley
+after downloading the library you should have the following directory structure:
+![Downloaded library](./share/Project_Folder.png)
 #### Linux:
  - Download appropriate raylib 5.5 library (https://github.com/raysan5/raylib/releases/tag/5.5)
  - For most this is (https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_linux_amd64.tar.gz)
@@ -30,6 +33,6 @@ Space to jump
     ```
  - Can optionally compile with CL compiler
     ```command
-       .\build_cl.bat
+    .\build_cl.bat
     ```
 
