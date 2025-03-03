@@ -21,7 +21,7 @@ void SoundManager::PlayBGM(BGMType type) {
 }
 
 void SoundManager::ContinueCombatMusic() {
-    combatTimer += combatTime;
+    combatTimer = fminf(combatTimer + combatTime, combatTime);
     PlayBGM(Combat);
 }
 
@@ -70,5 +70,5 @@ SoundManager::~SoundManager() {
 }
 
 void SoundManager::DrawUI() {
-    DrawText(TextFormat("BGM target: %d, BGM current %d, combat timer: %.2f, mixTimer = %.2f", target, current, combatTimer, mixTimer), 10, 70, 14, WHITE);
+    /*DrawText(TextFormat("BGM target: %d, BGM current %d, combat timer: %.2f, mixTimer = %.2f", target, current, combatTimer, mixTimer), 10, 70, 14, WHITE);*/
 }

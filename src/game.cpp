@@ -119,7 +119,7 @@ State Game::Update(float dt) {
         damageNumberManager.Update(dt);
         damageNumberManager.Render(renderData);
         EndMode2D();
-        DrawText(TextFormat("Screen rect: %s", Sprites::RenderData::RectToString(screenRect).c_str()), 10, 100, 10, WHITE);
+        /*DrawText(TextFormat("Screen rect: %s", Sprites::RenderData::RectToString(screenRect).c_str()), 10, 100, 10, WHITE);*/
         GameUI(dt);
         if (player.GetHealth().IsDead() || IsKeyPressed(KEY_Q)) {
             fader.StartFade(false);
