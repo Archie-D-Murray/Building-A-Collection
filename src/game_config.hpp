@@ -6,6 +6,9 @@ enum FamiliarType { Fire, Water, Earth, Lightning, FamiliarCount };
 enum Tier { Common, Uncommon, Rare, Epic, TierCount };
 enum EnemyType { Normal, Heavy, EnemyCount };
 enum ProjectileType { Linear, AoE, Chain };
+enum SFXType { SFXNone, PlayerHit, PlayerDeath, EnemyHit, EnemyDeath, SFXCount };
+enum BGMType { BGMNone, Passive, Combat, BGMCount };
+
 
 struct PlayerStats {
     float speed;
@@ -45,10 +48,26 @@ struct EnemyStats {
     std::vector<Sprites::SpriteID> projectileSprites;
 };
 
+struct SFXFile {
+    SFXType type;
+    const char* file;
+};
+
+struct BGMFile {
+    BGMType type;
+    const char* file;
+};
+
+struct SoundSettings {
+    std::vector<SFXFile> sfxFiles;
+    std::vector<BGMFile> bgmFiles;
+};
+
 struct GameConfig {
     PlayerStats playerStats;
     EnemyStats enemyStats[EnemyType::EnemyCount];
     FamiliarStats familiarStats[FamiliarType::FamiliarCount];
+    SoundSettings soundSettings;
 };
 
 

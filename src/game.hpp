@@ -9,6 +9,7 @@
 #include "enemy.hpp"
 #include "spawner.hpp"
 #include "vfx.hpp"
+#include "sound_manager.hpp"
 #include <vector>
 
 GameConfig CreateConfig();
@@ -38,6 +39,7 @@ public:
     const GameConfig config;
     float zoom = 4.0f;
     float scale;
+    SoundManager soundManager;
 
     Game(State state, Vector2 screenSize, Sprites::RenderData* data);
     void Init();

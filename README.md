@@ -1,5 +1,5 @@
 ## Theme
-Game made in a week with the theme of building a collection.
+Game made in a week with the theme of 'Building a Collection'.
 Player collects familiars to help them defeat a swarm of enemies.
 Just for fun, running with the flag `--no-fps-cap` removes frame cap
 

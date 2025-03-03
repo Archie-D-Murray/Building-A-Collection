@@ -117,6 +117,7 @@ Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data) :
     scale(1080.0f / screenSize.y), 
     zoom(4.0f * 1080.0f / screenSize.y),
     worldRadius(data->World().width * 0.5f),
+    soundManager(config.soundSettings.sfxFiles, config.soundSettings.bgmFiles),
     player(this) 
 {
     if (state == InGame) {
