@@ -19,12 +19,15 @@ void HeavyEnemy::Init(Game* game) {
 }
 
 void HeavyEnemy::Update(float dt, Game* game) {
+    if (effectable.stunned) {
+        return;
+    }
     if (attackTimer >= 0.0f) {
         attackTimer -= dt;
     }
     if (dashTimer >= 0.0f) {
         dashTimer -= dt;
-        velocity = dashDir * speed * dt;
+        velocity = dashDir * speed * effectable.speedModifier * dt;
         if (CheckCollisionCircles(game->player.position, game->player.collisionRadius, position, collisionRadius) && attackTimer <= 0.0f) {
             game->player.Damage(game, damage);
             attackTimer += attackTime;

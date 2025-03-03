@@ -1,7 +1,8 @@
 #include "enemy.hpp"
+#include "render_data.hpp"
 
 class HeavyEnemy : public Enemy {
-    float targetRange;
+    float targetRange = 350.0f;
     Vector2 dashDir;
     float dashTime = 2.0f;
     float dashTimer = 0.0f;

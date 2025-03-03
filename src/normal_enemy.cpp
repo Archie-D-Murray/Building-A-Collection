@@ -26,7 +26,7 @@ void NormalEnemy::Update(float dt, Game* game) {
     if (effectable.stunned) {
         return;
     }
-    velocity = Vector2ClampValue(game->player.position - position, 0.0f, speed * dt);
+    velocity = Vector2ClampValue(game->player.position - position, 0.0f, speed * effectable.speedModifier * dt);
     position += velocity;
     if (attackTimer >= 0.0f) {
         attackTimer -= dt;

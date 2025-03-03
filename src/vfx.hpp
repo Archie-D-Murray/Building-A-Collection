@@ -9,9 +9,10 @@ class VisualEffect {
     Vector2 position;
     float duration;
     float timer = 0.0f;
+    float rotation = 0.0f;
 
 public:
-    VisualEffect(Vector2 position, float duration, std::vector<Sprites::SpriteID> frames);
+    VisualEffect(Vector2 position, float duration, std::vector<Sprites::SpriteID> frames, float rotation = 0.0f);
     void Update(float dt);
     void Render(Sprites::RenderData* data);
     bool Finished();

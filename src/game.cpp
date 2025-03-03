@@ -19,6 +19,7 @@ GameConfig CreateConfig() {
             .collisionRadius = 6.0f,
             .idle = { Sprites::Player0 },
             .move = { Sprites::Player0, Sprites::Player1, Sprites::Player2 },
+            .dashParticles = { Sprites::DashParticle0, Sprites::DashParticle1, Sprites::DashParticle2 },
         },
         .enemyStats = {
             ENUM_INDEX(Normal) EnemyStats {
@@ -37,7 +38,7 @@ GameConfig CreateConfig() {
                .projectileSpeed = 0.0f,
                .collisionRadius = 16.0f,
                .projectileRadius = 0.0f,
-               .speed = 75.0f,
+               .speed = 225.0f,
                .sprites = { Sprites::HeavyTypeEnemy0, Sprites::HeavyTypeEnemy1, Sprites::HeavyTypeEnemy2 },
                .projectileSprites = { Sprites::Count, Sprites::Count },
             }
@@ -155,7 +156,7 @@ void Game::GameUI(float dt) {
     const float healthBarXOffset = 12 + 3 * Sprites::SPRITE_SIZE;
     DrawRectangleRec(bar, red);
     renderData->DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
-    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], familiar rotation: %.0f", player.position.x, player.position.y, player.familiarRotation * RAD2DEG), 10, 35, 14, WHITE);
+    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], dash timer: %d", player.position.x, player.position.y, player.IsVulnerable() * RAD2DEG), 10, 35, 14, WHITE);
 }
 
 void Game::GameBackground() {
@@ -226,7 +227,7 @@ State Game::Update(float dt) {
         EndMode2D();
         DrawText(TextFormat("Screen rect: %s", Sprites::RenderData::RectToString(screenRect).c_str()), 10, 100, 10, WHITE);
         GameUI(dt);
-        if (player.GetHealth().IsDead()) {
+        if (player.GetHealth().IsDead() || IsKeyPressed(KEY_Q)) {
             fader.StartFade(false);
             nextState = Menu;
         }
@@ -326,11 +327,15 @@ void Game::ProcessProjectiles(float dt) {
 }
 
 void Game::SpawnRandomEnemy(Game* game, Vector2 position) {
+    #if 1
+    game->enemies.push_back(dynamic_cast<Enemy*>(new HeavyEnemy(game, position)));
+    #else
     if (!game->enemies.empty() && game->spawnCount % 10 == 0) {
         game->enemies.push_back(dynamic_cast<Enemy*>(new HeavyEnemy(game, position)));
     } else {
         game->enemies.push_back(dynamic_cast<Enemy*>(new NormalEnemy(game, position)));
     }
+    #endif
     game->spawnCount++;
     if (game->spawnCount % 25 == 0) {
         game->enemySpawner.DecreaseSpawnCooldown(0.1f, 0.25f);

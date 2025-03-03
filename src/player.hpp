@@ -17,13 +17,16 @@ class Player {
     Effectable effectable;
     EntityAnimator animator;
     float dashTimer = 0.0f;
+    float dashCooldownTimer = 0.0f;
     Vector2 dashDirection;
+    bool vulnerable = true;
 
 public:
     Player(Game* game);
     float collisionRadius;
     float familiarRotation;
     float dashCooldown;
+    float dashDuration;
     float dashSpeed;
     Vector2 position;
     void Init(Game* game);
@@ -38,4 +41,5 @@ public:
     void Damage(Game* game, float damage);
     bool IsStunned() { return effectable.stunned; };
     void FamiliarDamage(Game* game);
+    bool IsVulnerable();
 };

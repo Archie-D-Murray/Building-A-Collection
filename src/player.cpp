@@ -17,7 +17,9 @@ void Player::Init(Game* game) {
     position = game->screenSize * 0.5f;
     velocity = { 0 };
     speed = game->config.playerStats.speed;
-    dashSpeed = speed * 2.0f;
+    dashSpeed = speed * 3.0f;
+    dashDuration = 0.25f;
+    dashCooldown = 1.0f;
     collisionRadius = game->config.playerStats.collisionRadius;
     health = Health(game->config.playerStats.health);
     AddFamiliar(game, Fire);
@@ -41,15 +43,26 @@ void Player::Update(Game* game, float dt) {
         (float)(IsKeyDown(KEY_S) - IsKeyDown(KEY_W)),
     };
 
-    if (IsKeyPressed(KEY_SPACE) && dashTimer <= 0.0f && Vector2LengthSqr(input) > 0) {
-        dashTimer += dashCooldown;
+    if (IsKeyPressed(KEY_SPACE) && dashCooldownTimer <= 0.0f && Vector2LengthSqr(input) > 0) {
+        dashTimer += dashDuration;
+        dashCooldownTimer += dashCooldown;
         dashDirection = Vector2Normalize(input);
+        vulnerable = false;
+        game->visualEffects.push_back(VisualEffect(position - dashDirection, 0.48f, game->config.playerStats.dashParticles, Vector2Angle(Vector2 { -1, 0 }, dashDirection * -1.0f) * RAD2DEG));
+    }
+    if (dashCooldownTimer >= 0.0f) {
+        dashCooldownTimer -= dt;
     }
     if (dashTimer <= 0.0f) {
+        if (!vulnerable) {
+            TraceLog(LOG_INFO, "Set vulnerable to true in velocity handle dashTimer was %f", dashTimer);
+        }
+        vulnerable = true;
         velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
         // If frame rate is uncapped then dt = 0.0002 will mean velocity magnitude test fails
-        animator.Play(Vector2LengthSqr(input) > 0.01f ? Move : Idle);  
+        animator.Play(Vector2LengthSqr(input) > 0.01f ? Move : Idle);
     } else {
+        vulnerable = false;
         velocity = dashDirection * dashSpeed * dt;
         dashTimer -= dt;
         animator.Play(Move);
@@ -62,14 +75,23 @@ void Player::Update(Game* game, float dt) {
         position = game->screenSize * 0.5f + Vector2Rotate({ 0, game->worldRadius - collisionRadius }, angle);
         // Cancel dash on wall hit
         dashTimer = 0.0f;
+        if (!vulnerable) {
+            TraceLog(LOG_INFO, "Set vulnerable to true in velocity handle");
+        }
+        vulnerable = true;
+        TraceLog(LOG_INFO, "Dash cancelled");
     } else {
         position += velocity;
     }
 }
 
 void Player::Render(Sprites::RenderData* data) {
-    data->DrawSprite(animator.GetSprite(), position);
+    data->DrawSprite(animator.GetSprite(), position, 0.0f, vulnerable ? WHITE : BLUE);
     effectable.Render(data, position);
+}
+
+bool Player::IsVulnerable() {
+    return vulnerable;
 }
 
 void Player::AddFamiliar(Game* game, FamiliarType type) {
@@ -95,6 +117,7 @@ bool Player::Collides(Projectile* projectile) {
 }
 
 void Player::Damage(Game* game, Projectile* projectile) {
+    if (!vulnerable) { return; }
     TraceLog(LOG_INFO, "Player was hit for %0.0f damage", projectile->damage);
     health.Damage(projectile->damage);
     game->soundManager.ContinueCombatMusic();
@@ -107,6 +130,7 @@ void Player::Damage(Game* game, Projectile* projectile) {
 }
 
 void Player::Damage(Game* game, float damage) {
+    if (!vulnerable) { return; }
     health.Damage(damage);
     game->damageNumberManager.PushDamageNumber(damage, position);
     game->soundManager.ContinueCombatMusic();

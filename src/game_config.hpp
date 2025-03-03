@@ -17,6 +17,7 @@ struct PlayerStats {
     float collisionRadius;
     std::vector<Sprites::SpriteID> idle;
     std::vector<Sprites::SpriteID> move;
+    std::vector<Sprites::SpriteID> dashParticles;
 };
 
 struct FamiliarStats {
