@@ -6,6 +6,7 @@ Just for fun, running with the flag `--no-fps-cap` removes frame cap
 ## Controls
 WASD to move
 Space to jump
+Q to quit
 
 ## Screenshot:
 ![Demo](./share/Demo.png)
