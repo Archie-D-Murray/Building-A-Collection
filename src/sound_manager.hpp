@@ -20,4 +20,5 @@ public:
     void PlayBGM(BGMType type);
     void ContinueCombatMusic();
     void Update(float dt);
+    void DrawUI();
 };

@@ -49,6 +49,7 @@ void Game::GameUI(float dt) {
     const float healthBarXOffset = 12 + 3 * Sprites::SPRITE_SIZE;
     DrawRectangleRec(bar, red);
     renderData->DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
+    soundManager->DrawUI();
     /*DrawText(TextFormat("Player pos: [ %.0f, %.0f ], dash timer: %d", player.position.x, player.position.y, player.IsVulnerable() * RAD2DEG), 10, 35, 14, WHITE);*/
 }
 

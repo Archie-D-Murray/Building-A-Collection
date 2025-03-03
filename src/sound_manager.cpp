@@ -26,6 +26,9 @@ void SoundManager::ContinueCombatMusic() {
 }
 
 void SoundManager::Update(float dt) {
+    if (IsKeyPressed(KEY_M)) {
+        PlayBGM(Passive);
+    }
     if (combatTimer >= 0.0f) { // Playing combat music
         combatTimer -= dt;
         if (combatTimer <= 0.0f) { // First case of done with combat music
@@ -36,20 +39,25 @@ void SoundManager::Update(float dt) {
         mixTimer += dt;
         if (current != BGMNone) {
             SetMusicVolume(bgm[current], Clamp(1.0f - mixTimer / mixTime, 0.0f, 1.0f) * globalVolume);
+            UpdateMusicStream(bgm[current]);
         }
         if (target != BGMNone) {
             if (!IsMusicStreamPlaying(bgm[target])) {
                 PlayMusicStream(bgm[target]);
             }
             SetMusicVolume(bgm[target], Clamp(mixTimer / mixTime, 0.0f, 1.0f) * globalVolume);
+            UpdateMusicStream(bgm[target]);
         }
         if (mixTimer >= mixTime) {
-            StopMusicStream(bgm[current]);
-            current = target;
             if (current != BGMNone) {
+                StopMusicStream(bgm[current]);
             }
+            current = target;
         }
-    }   
+    } else if (current != BGMNone) {
+        UpdateMusicStream(bgm[current]);
+    }
+
 }
 
 SoundManager::~SoundManager() {
@@ -59,4 +67,8 @@ SoundManager::~SoundManager() {
     for (size_t i = BGMNone + 1; i < (size_t) BGMCount; i++) {
         UnloadMusicStream(bgm[i]);
     }
+}
+
+void SoundManager::DrawUI() {
+    DrawText(TextFormat("BGM target: %d, BGM current %d, combat timer: %.2f, mixTimer = %.2f", target, current, combatTimer, mixTimer), 10, 70, 14, WHITE);
 }
