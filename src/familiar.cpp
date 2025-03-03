@@ -103,7 +103,7 @@ Enemy* Familiar::GetTarget(Game* game) {
 
 void Familiar::Attack(Game* game, Enemy* target) {
     attackTimer += attackTime * FIRE_RATE_MODIFIERS[tier];
-    if (projectileSpeed < 0 || _isnanf(projectileSpeed) || isinf(projectileSpeed)) {
+    if (projectileSpeed < 0 || isnanf(projectileSpeed) || isinf(projectileSpeed)) {
         DebugTrap();
     }
     game->familiarProjectiles.push_back(

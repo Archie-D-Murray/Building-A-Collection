@@ -6,7 +6,7 @@ void DamageNumberManager::Update(float dt) {
     uint8_t alpha = 255;
     for (size_t i = 0; i < damageNumbers.size();) {
         damageNumbers[i].Update(dt);
-        if (damageNumbers[i].colour.a == 0) {
+        if (damageNumbers[i].timer == 0.0f) {
             damageNumbers[i] = damageNumbers.back();
             damageNumbers.pop_back();
         } else {

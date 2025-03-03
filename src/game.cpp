@@ -327,7 +327,7 @@ void Game::ProcessProjectiles(float dt) {
 }
 
 void Game::SpawnRandomEnemy(Game* game, Vector2 position) {
-    #if 1
+    #if 0
     game->enemies.push_back(dynamic_cast<Enemy*>(new HeavyEnemy(game, position)));
     #else
     if (!game->enemies.empty() && game->spawnCount % 10 == 0) {
