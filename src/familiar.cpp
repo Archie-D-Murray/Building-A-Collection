@@ -1,4 +1,5 @@
 #include "familiar.hpp"
+#include "effectable.hpp"
 #include "game.hpp"
 #include "game_config.hpp"
 #include "projectile.hpp"
@@ -117,16 +118,28 @@ void Familiar::Attack(Game* game, Enemy* target) {
     Projectile* projectile = game->familiarProjectiles.back();
     switch (type) {
     case Fire:
+        projectile->effects.push_back(
+            Effect::CreateDoT(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectTickRate, game->config.familiarStats[type].effectDuration)
+        );
     case Water:
         projectile->type = Linear;
+        projectile->effects.push_back(
+            Effect::CreateSlow(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectDuration)
+        );
         break;
     case Earth:
         projectile->type = AoE;
+        projectile->effects.push_back(
+            Effect::CreateStun(game->config.familiarStats[type].effectDuration)
+        );
         projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
         break;
     case Lightning:
         projectile->chainCount = this->arcCount;
         projectile->type = Chain;
+        projectile->effects.push_back(
+            Effect::CreateStun(game->config.familiarStats[type].effectDuration)
+        );
         projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
         break;
     default:

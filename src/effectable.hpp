@@ -13,6 +13,10 @@ public:
     float tickTimer = 0.0f;
     float durationTimer = 0.0f;
     float duration = 1.0f;
+
+    static Effect CreateSlow(float magnitude, float duration);
+    static Effect CreateStun(float duration);
+    static Effect CreateDoT(float magnitude, float tickRate, float duration);
 };
 
 class Effectable {

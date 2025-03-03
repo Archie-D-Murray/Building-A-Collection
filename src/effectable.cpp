@@ -3,6 +3,29 @@
 #include "raylib.h"
 #include <cmath>
 
+
+Effect Effect::CreateSlow(float magnitude, float duration) {
+    return Effect {
+        .type = Slow,
+        .magnitude = magnitude,
+        .duration = duration
+    };
+}
+Effect Effect::CreateStun(float duration) {
+    return Effect {
+        .type = Stun,
+        .duration = duration
+    };
+}
+Effect Effect::CreateDoT(float magnitude, float tickRate, float duration) {
+    return Effect {
+        .type = DamageOverTime,
+        .magnitude = magnitude,
+        .tickRate = tickRate,
+        .duration = duration
+    };
+}
+
 void Effectable::Update(float dt) {
     speedModifier = 1.0f;
     for (size_t i = 0; i < effects[Slow].size();) {
