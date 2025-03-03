@@ -3,7 +3,7 @@
 #include "raymath.h"
 #include <string>
 
-#if 0
+#if __clang__
 #define ENUM_INDEX(value) [value] = 
 #else
 #define ENUM_INDEX(value) 
@@ -54,6 +54,18 @@ namespace Sprites {
         LightningVisual0,
         LightningVisual1,
         LightningVisual2,
+        FireParticle0,
+        FireParticle1,
+        FireParticle2,
+        IceParticle,
+        LightningParticle0,
+        LightningParticle1,
+        LightningParticle2,
+        EarthParticle0,
+        EarthParticle1,
+        DashParticle0,
+        DashParticle1,
+        DashParticle2,
         FamiliarOutline,
         FamiliarEggIndicator,
         HealthBarOverlay,
@@ -118,6 +130,18 @@ namespace Sprites {
             ENUM_INDEX(LightningVisual0)       CreateSprite({  4 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
             ENUM_INDEX(LightningVisual1)       CreateSprite({  6 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
             ENUM_INDEX(LightningVisual2)       CreateSprite({  8 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
+            ENUM_INDEX(FireParticle0)          CreateSprite({  0 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(FireParticle1)          CreateSprite({  1 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(FireParticle2)          CreateSprite({  2 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(IceParticle)            CreateSprite({  3 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(LightningParticle0)     CreateSprite({  4 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(LightningParticle1)     CreateSprite({  5 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(LightningParticle2)     CreateSprite({  6 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(EarthParticle0)         CreateSprite({  7 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(EarthParticle1)         CreateSprite({  8 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(DashParticle0)          CreateSprite({  9 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(DashParticle1)          CreateSprite({ 10 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+            ENUM_INDEX(DashParticle2)          CreateSprite({ 11 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
             ENUM_INDEX(FamiliarOutline)        CreateSprite({ 10 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
             ENUM_INDEX(FamiliarEggIndicator)   CreateSprite({  0 * SPRITE_SIZE, 11 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
 

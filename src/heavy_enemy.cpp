@@ -12,6 +12,7 @@ HeavyEnemy::HeavyEnemy(Game* game, Vector2 position) : Enemy(position, game->con
 }
 
 void HeavyEnemy::Init(Game* game) {
+    effectable.Init(game);
     speed = game->config.enemyStats[Heavy].speed;
     collisionRadius = game->config.enemyStats[Heavy].collisionRadius;
     animator.SetAnimations(Idle, game->config.enemyStats[Heavy].sprites);
@@ -36,6 +37,7 @@ void HeavyEnemy::Update(float dt, Game* game) {
 
 void HeavyEnemy::Render(Sprites::RenderData* data) {
     data->DrawSprite(animator.GetSprite(), position);
+    effectable.Render(data, position);
 }
 
 void HeavyEnemy::Fire(Game* game) {

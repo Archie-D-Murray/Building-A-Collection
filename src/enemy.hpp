@@ -27,9 +27,9 @@ public:
     float speed = 100.0f;
     float damage = 1;
     float collisionRadius = 10.0f;
-    float range = 100.0f;
-    float projectileSpeed = 100.0f;
-    float attackTime = 1.0f;
+    float range = 350.0f;
+    float projectileSpeed = 150.0f;
+    float attackTime = 1.5f;
     
     virtual void Init(Game* game) = 0;
     virtual void Update(float dt, Game* game) = 0;

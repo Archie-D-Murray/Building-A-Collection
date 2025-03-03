@@ -2,6 +2,7 @@
 #include "game.hpp"
 #include "player.hpp"
 #include "projectile.hpp"
+#include "raylib.h"
 #include "render_data.hpp"
 
 NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->config.enemyStats[Normal].health, game->difficulty) {
@@ -10,6 +11,7 @@ NormalEnemy::NormalEnemy(Game* game, Vector2 position) : Enemy(position, game->c
 }
 
 void NormalEnemy::Init(Game* game) {
+    effectable.Init(game);
     projectileSpeed = game->config.enemyStats[Normal].projectileSpeed;
     speed = game->config.enemyStats[Normal].speed * difficulty;
     range *= difficulty;
@@ -20,9 +22,13 @@ void NormalEnemy::Init(Game* game) {
 }
 
 void NormalEnemy::Update(float dt, Game* game) {
+    effectable.Update(dt);
+    if (effectable.stunned) {
+        return;
+    }
     velocity = Vector2ClampValue(game->player.position - position, 0.0f, speed * dt);
     position += velocity;
-    if (attackTimer > 0.0f) {
+    if (attackTimer >= 0.0f) {
         attackTimer -= dt;
     }
     animator.Update(dt);
@@ -30,6 +36,7 @@ void NormalEnemy::Update(float dt, Game* game) {
 
 void NormalEnemy::Render(Sprites::RenderData* data) {
     data->DrawSprite(animator.GetSprite(), position);
+    effectable.Render(data, position);
 }
 
 void NormalEnemy::Fire(Game* game) {

@@ -2,7 +2,7 @@
 #include "render_data.hpp"
 
 class NormalEnemy : public Enemy {
-    float followRange = 350.0f;
+    float followRange = 650.0f;
     float projectileRadius;
 public:
     NormalEnemy(Game* game, Vector2 position);

@@ -8,6 +8,7 @@
 #include "raymath.h"
 #include "debug.h"
 #include "render_data.hpp"
+#include <cmath>
 
 const float DAMAGE_MODIFIERS[TierCount] = {
     ENUM_INDEX(Common)    1.0f,
@@ -102,6 +103,9 @@ Enemy* Familiar::GetTarget(Game* game) {
 
 void Familiar::Attack(Game* game, Enemy* target) {
     attackTimer += attackTime * FIRE_RATE_MODIFIERS[tier];
+    if (projectileSpeed < 0 || _isnanf(projectileSpeed) || isinf(projectileSpeed)) {
+        DebugTrap();
+    }
     game->familiarProjectiles.push_back(
         new Projectile(
             position, 
@@ -112,25 +116,22 @@ void Familiar::Attack(Game* game, Enemy* target) {
             game->config.familiarStats[type].projectileSprites
         )
     );
-    if (damage == 0.0f) {
-        DebugTrap();
-    }
     Projectile* projectile = game->familiarProjectiles.back();
     switch (type) {
     case Fire:
         projectile->effects.push_back(
-            Effect::CreateDoT(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectTickRate, game->config.familiarStats[type].effectDuration)
+            Effect::CreateDoT(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectTickRate, game->config.familiarStats[type].effectDuration, OnFire)
         );
     case Water:
         projectile->type = Linear;
         projectile->effects.push_back(
-            Effect::CreateSlow(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectDuration)
+            Effect::CreateSlow(game->config.familiarStats[type].effectMagnitude, game->config.familiarStats[type].effectDuration, Iced)
         );
         break;
     case Earth:
         projectile->type = AoE;
         projectile->effects.push_back(
-            Effect::CreateStun(game->config.familiarStats[type].effectDuration)
+            Effect::CreateStun(game->config.familiarStats[type].effectDuration, Grounded)
         );
         projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
         break;
@@ -138,7 +139,7 @@ void Familiar::Attack(Game* game, Enemy* target) {
         projectile->chainCount = this->arcCount;
         projectile->type = Chain;
         projectile->effects.push_back(
-            Effect::CreateStun(game->config.familiarStats[type].effectDuration)
+            Effect::CreateStun(game->config.familiarStats[type].effectDuration, Zapped)
         );
         projectile->AddVFX(game->config.familiarStats[type].visualDuration, game->config.familiarStats[type].visualEffectSprites);
         break;

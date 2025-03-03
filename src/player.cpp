@@ -13,7 +13,7 @@ Player::Player(Game* game) : effectable(), health(100.0f) {}
 void Player::Init(Game* game) {
     animator.SetAnimations(Idle, game->config.playerStats.idle);
     animator.SetAnimations(Move, game->config.playerStats.move);
-    TraceLog(LOG_INFO, "Initilised player animations");
+    effectable.Init(game);
     position = game->screenSize * 0.5f;
     velocity = { 0 };
     speed = game->config.playerStats.speed;
@@ -21,6 +21,7 @@ void Player::Init(Game* game) {
     collisionRadius = game->config.playerStats.collisionRadius;
     health = Health(game->config.playerStats.health);
     AddFamiliar(game, Fire);
+    familiarRotation = 0.0f;
     effectable = Effectable();
     effectable.health = &health;
     TraceLog(LOG_INFO, "Player health: %.0f", health.CurrentHealth());
@@ -28,6 +29,9 @@ void Player::Init(Game* game) {
 
 void Player::Update(Game* game, float dt) {
     familiarRotation += dt * PI;
+    if (familiarRotation >= 2 * PI) {
+        familiarRotation -= 2 * PI;
+    }
     if (effectable.stunned) {
         return;
     }
@@ -65,6 +69,7 @@ void Player::Update(Game* game, float dt) {
 
 void Player::Render(Sprites::RenderData* data) {
     data->DrawSprite(animator.GetSprite(), position);
+    effectable.Render(data, position);
 }
 
 void Player::AddFamiliar(Game* game, FamiliarType type) {

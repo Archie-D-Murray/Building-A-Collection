@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "entity_animator.hpp"
 #include "familiar.hpp"
 #include "game_config.hpp"
 #include "gui.hpp"
@@ -21,7 +22,7 @@ GameConfig CreateConfig() {
         },
         .enemyStats = {
             ENUM_INDEX(Normal) EnemyStats {
-               .health = 25.0f,
+               .health = 50.0f,
                .damage = 5.0f,
                .projectileSpeed = 125.0f,
                .collisionRadius = 8.0f,
@@ -31,7 +32,7 @@ GameConfig CreateConfig() {
                .projectileSprites = { Sprites::EnemyProjectile0, Sprites::EnemyProjectile1 },
             },
             ENUM_INDEX(Heavy) EnemyStats {
-               .health = 50.0f,
+               .health = 200.0f,
                .damage = 15.0f,
                .projectileSpeed = 0.0f,
                .collisionRadius = 16.0f,
@@ -106,6 +107,12 @@ GameConfig CreateConfig() {
                 .visualEffectSprites = { Sprites::LightningVisual0, Sprites::LightningVisual1, Sprites::LightningVisual2 },
             },
         },
+        .particleSettings = {
+            ParticleSetting { .animation = OnFire, .  sprites = { Sprites::FireParticle0, Sprites::FireParticle1, Sprites::FireParticle2 } },
+            ParticleSetting { .animation = Iced,     .sprites = { Sprites::IceParticle } },
+            ParticleSetting { .animation = Grounded, .sprites = { Sprites::EarthParticle0, Sprites::EarthParticle1 } },
+            ParticleSetting { .animation = Zapped,   .sprites = { Sprites::LightningParticle0, Sprites::LightningParticle1 } },
+        },
     };
 };
 
@@ -148,7 +155,7 @@ void Game::GameUI(float dt) {
     const float healthBarXOffset = 12 + 3 * Sprites::SPRITE_SIZE;
     DrawRectangleRec(bar, red);
     renderData->DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
-    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], distance from centre: %.0f, dot: %.2f", player.position.x, player.position.y, Vector2Distance(player.position, screenSize * 0.5f), Vector2DotProduct(Vector2Normalize(screenSize * 0.5f - player.position), Vector2Normalize(player.Velocity()))), 10, 35, 14, WHITE);
+    DrawText(TextFormat("Player pos: [ %.0f, %.0f ], familiar rotation: %.0f", player.position.x, player.position.y, player.familiarRotation * RAD2DEG), 10, 35, 14, WHITE);
 }
 
 void Game::GameBackground() {
@@ -236,7 +243,8 @@ State Game::Update(float dt) {
             fader.StartFade(false);
         }
     }
-    soundManager.Update(dt);
+    // Sound
+    // soundManager.Update(dt);
     fader.Update(this, dt);
     if (fader.FinishedStateFade()) {
         return nextState;
@@ -301,7 +309,9 @@ void Game::ProcessProjectiles(float dt) {
             if (hitCount >= hitMax) {
                 break;
             }
-            if (projectile->OffScreen(this)) {
+
+            // TODO: Sometimes projectiles have weird speed values not sure why
+            if (projectile->OffScreen(this) || projectile->speed <= EPSILON) {
                 deleted = true;
             }
         }

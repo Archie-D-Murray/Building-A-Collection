@@ -1,5 +1,6 @@
 #pragma once
 
+#include "entity_animator.hpp"
 #include "render_data.hpp"
 #include <vector>
 enum FamiliarType { Fire, Water, Earth, Lightning, FamiliarCount };
@@ -63,11 +64,17 @@ struct SoundSettings {
     std::vector<BGMFile> bgmFiles;
 };
 
+struct ParticleSetting {
+    Animation animation;
+    std::vector<Sprites::SpriteID> sprites;
+};
+
 struct GameConfig {
     PlayerStats playerStats;
     EnemyStats enemyStats[EnemyType::EnemyCount];
     FamiliarStats familiarStats[FamiliarType::FamiliarCount];
     SoundSettings soundSettings;
+    std::vector<ParticleSetting> particleSettings;
 };
 
 

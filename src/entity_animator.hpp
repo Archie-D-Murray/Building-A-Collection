@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 
-enum Animation { Idle, Move, Attack };
+enum Animation { Idle, Move, Attack, OnFire, Iced, Zapped, Grounded };
 
 class EntityAnimator {
     std::map<Animation, std::vector<Sprites::SpriteID>> animations;
@@ -20,7 +20,16 @@ class EntityAnimator {
             return "Move";
         case Attack:
             return "Attack";
+        case OnFire:
+            return "OnFire";
+        case Iced:
+            return "Iced";
+        case Zapped:
+            return "Zapped";
+        case Grounded:
+            return "Grounded";
         }
+        return "None";
     }
 
 public:
