@@ -43,7 +43,8 @@ void Player::Update(Game* game, float dt) {
     }
     if (dashTimer <= 0.0f) {
         velocity = Vector2Normalize(input) * (speed * dt * effectable.speedModifier);
-        animator.Play(Vector2LengthSqr(velocity) > 0.01f ? Move : Idle);
+        // If frame rate is uncapped then dt = 0.0002 will mean velocity magnitude test fails
+        animator.Play(Vector2LengthSqr(input) > 0.01f ? Move : Idle);  
     } else {
         velocity = dashDirection * dashSpeed * dt;
         dashTimer -= dt;
@@ -91,6 +92,7 @@ bool Player::Collides(Projectile* projectile) {
 void Player::Damage(Game* game, Projectile* projectile) {
     TraceLog(LOG_INFO, "Player was hit for %0.0f damage", projectile->damage);
     health.Damage(projectile->damage);
+    game->soundManager.ContinueCombatMusic();
     projectile->PushVFX(game, position);
     game->damageNumberManager.PushDamageNumber(projectile->damage, projectile->position);
     for (Effect& effect : projectile->effects) {
@@ -102,6 +104,7 @@ void Player::Damage(Game* game, Projectile* projectile) {
 void Player::Damage(Game* game, float damage) {
     health.Damage(damage);
     game->damageNumberManager.PushDamageNumber(damage, position);
+    game->soundManager.ContinueCombatMusic();
     FamiliarDamage(game);
 }
 

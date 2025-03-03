@@ -115,11 +115,12 @@ Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data) :
     config(CreateConfig()), 
     screenSize(screenSize), 
     scale(1080.0f / screenSize.y), 
-    zoom(4.0f * 1080.0f / screenSize.y),
+    zoom(4.0f * screenSize.y / 1080.0f),
     worldRadius(data->World().width * 0.5f),
     soundManager(config.soundSettings.sfxFiles, config.soundSettings.bgmFiles),
     player(this) 
 {
+    soundManager.PlayBGM(Passive);
     if (state == InGame) {
         player = Player(this);
         Rectangle spawnArea = {0, 0, screenSize.x / zoom, screenSize.y / zoom};
@@ -235,6 +236,7 @@ State Game::Update(float dt) {
             fader.StartFade(false);
         }
     }
+    soundManager.Update(dt);
     fader.Update(this, dt);
     if (fader.FinishedStateFade()) {
         return nextState;
@@ -327,6 +329,5 @@ void Game::SpawnRandomEnemy(Game* game, Vector2 position) {
 }
 
 void Game::SpawnRandomFamiliar(Game* game, Vector2 position) {
-    TraceLog(LOG_INFO, "Spawned egg at (%.0f, %.0f)", position.x, position.y);
     game->familiarEggs.push_back(FamiliarEgg(position, (FamiliarType)GetRandomValue(0, 3)));
 }

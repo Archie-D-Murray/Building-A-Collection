@@ -21,6 +21,7 @@ bool Enemy::DoCollision(Game* game, Projectile* projectile) {
         health.Damage(projectile->damage);
         projectile->PushVFX(game, position);
         game->damageNumberManager.PushDamageNumber(projectile->damage, projectile->position);
+        game->soundManager.ContinueCombatMusic();
         for (Effect& effect : projectile->effects) {
             effectable.AcceptEffect(effect);
         }

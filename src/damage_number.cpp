@@ -5,7 +5,10 @@
 
 void DamageNumber::Update(float dt) {
     const float speed = 10.0f;
-    colour.a = fmaxf(0, colour.a - floorf(255 * dt));
+    timer = fmaxf(0.0f, timer - dt);
+    // Can't just decrement alpha by dt as rounding makes it
+    // 0 in certain cases
+    colour.a = roundf(timer / duration * 255.0f);
     position += Vector2 { 0, -speed } * dt;
 }
 
@@ -16,5 +19,6 @@ void DamageNumber::Render(Sprites::RenderData* data) {
 void DamageNumber::Reset(float damage, Vector2 position) {
     this->damage = damage;
     this->position = position;
+    timer = duration;
     colour = DEFAULT;
 }

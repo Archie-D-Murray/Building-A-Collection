@@ -17,7 +17,18 @@ void SoundManager::PlayBGM(BGMType type) {
     mixTimer = 0.0f;
 }
 
+void SoundManager::ContinueCombatMusic() {
+    combatTimer += combatTime;
+    PlayBGM(Combat);
+}
+
 void SoundManager::Update(float dt) {
+    if (combatTimer >= 0.0f) { // Playing combat music
+        combatTimer -= dt;
+        if (combatTimer <= 0.0f) { // First case of done with combat music
+            PlayBGM(Passive);
+        }
+    }
     if (target != current) {
         mixTimer += dt;
         if (current != BGMNone) {
