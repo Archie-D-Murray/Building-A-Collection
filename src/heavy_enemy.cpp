@@ -19,6 +19,7 @@ void HeavyEnemy::Init(Game* game) {
 }
 
 void HeavyEnemy::Update(float dt, Game* game) {
+    health.Update(dt);
     effectable.Update(game, position, dt);
     if (effectable.stunned) {
         return;
@@ -40,7 +41,7 @@ void HeavyEnemy::Update(float dt, Game* game) {
 }
 
 void HeavyEnemy::Render(Sprites::RenderData* data) {
-    data->DrawSprite(animator.GetSprite(), position);
+    data->DrawSprite(animator.GetSprite(), position, 0.0f, health.DamageTint());
     effectable.Render(data, position);
 }
 

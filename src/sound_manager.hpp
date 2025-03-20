@@ -14,11 +14,14 @@ class SoundManager {
 
 public:
     float globalVolume = 0.5f;
-    SoundManager(std::vector<SFXFile> sfx, std::vector<BGMFile> bgm);
+    float bgmVolume = 0.5f;
+    float sfxVolume = 0.5f;
+    SoundManager(std::vector<SFXFile> sfx, std::vector<BGMFile> bgm, GameConfig* config);
     ~SoundManager();
     void PlaySFX(SFXType type);
     void PlayBGM(BGMType type);
     void ContinueCombatMusic();
+    void UpdateVolume();
     void Update(float dt);
     void DrawUI();
 };

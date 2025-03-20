@@ -63,6 +63,9 @@ struct BGMFile {
 struct SoundSettings {
     std::vector<SFXFile> sfxFiles;
     std::vector<BGMFile> bgmFiles;
+    float globalVolume = 0.5f;
+    float bgmVolume = 1.0f;
+    float sfxVolume = 1.0f;
 };
 
 struct ParticleSetting {
@@ -124,7 +127,7 @@ inline GameConfig CreateConfig() {
                 .damage = 30.0f,
                 .effectMagnitude = 3.0f,
                 .effectDuration = 2.0f,
-                .effectTickRate = 0.25f,
+                .effectTickRate = 0.5f,
                 .speed = 175.0f,
                 .projectileRadius = 8.0f,
                 .projectileSpeed = 425.0f,

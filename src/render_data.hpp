@@ -70,7 +70,7 @@ namespace Sprites {
         FamiliarEggIndicator,
         HealthBarOverlay,
         HealthBarBackground,
-        Lamp,
+        Logo,
         Count 
     };
     const static float SPRITE_SIZE = 16.0f;
@@ -79,11 +79,12 @@ namespace Sprites {
     private:
         Texture2D atlas;
         Texture2D world;
+        Texture2D backgroundUI;
         Image icon;
         Font font;
         NPatchInfo normal;
         NPatchInfo pressed;
-        Color hoverTint = { 0xA8, 0xA8, 0xA8, 0xA8 };
+        Color hoverTint = { 0xA8, 0xA8, 0xA8, 0xFF };
 
         const Sprite sprites[SpriteID::Count] = {
             ENUM_INDEX(Player0)                CreateSprite({ 0 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE}, { 8, 8 } ),
@@ -149,20 +150,16 @@ namespace Sprites {
             // UI                                                                                                                       \\
             //--------------------------------------------------------------------------------------------------------------------------\\
 
-            ENUM_INDEX(HealthBarOverlay)       CreateSprite({ 0 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
-            ENUM_INDEX(HealthBarBackground)    CreateSprite({ 6 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
-
-            //--------------------------------------------------------------------------------------------------------------------------\\
-            // Background                                                                                                               \\
-            //--------------------------------------------------------------------------------------------------------------------------\\
-
-            ENUM_INDEX(Lamp)                   CreateSprite({ 3 * SPRITE_SIZE, 10 * SPRITE_SIZE, SPRITE_SIZE, 2 * SPRITE_SIZE}, { 8, SPRITE_SIZE }),
+            ENUM_INDEX(HealthBarOverlay)       CreateSprite({  0 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
+            ENUM_INDEX(HealthBarBackground)    CreateSprite({  6 * SPRITE_SIZE, 3 * SPRITE_SIZE + 5, 6.0f * SPRITE_SIZE, 6}, { 3 * SPRITE_SIZE, 3 } ),
+            ENUM_INDEX(Logo)                   CreateSprite({  0 * SPRITE_SIZE, 13 * SPRITE_SIZE, 12 * SPRITE_SIZE, 4 * SPRITE_SIZE}, { 6 * SPRITE_SIZE, 2 * SPRITE_SIZE }),
     };
     public:
-        RenderData(const char* atlasFileName, const char* fontFileName, const char* maskFileName, const char* iconFileName) {
-            atlas = LoadTexture(atlasFileName);
-            world = LoadTexture(maskFileName);
-            icon  = LoadImage(iconFileName);
+        RenderData(const char* atlasFileName, const char* fontFileName, const char* worldFileName, const char* backgroundUIFileName, const char* iconFileName) {
+            atlas =        LoadTexture(atlasFileName);
+            world =        LoadTexture(worldFileName);
+            backgroundUI = LoadTexture(backgroundUIFileName);
+            icon  =        LoadImage(iconFileName);
             SetWindowIcon(icon);
             SetTextureFilter(atlas, TEXTURE_FILTER_POINT);
             SetTextureFilter(world, TEXTURE_FILTER_POINT);
@@ -194,6 +191,10 @@ namespace Sprites {
 
         inline Texture2D& World() {
             return world;
+        }
+
+        inline Texture2D& UIBackground() {
+            return backgroundUI;
         }
 
         inline Font& GetFont() {
@@ -230,9 +231,15 @@ namespace Sprites {
             DrawTexturePro(GetAtlas(), GetSource(sprite), Rectangle { position.x, position.y, size.x, size.y }, GetOffset(sprite) * scale, 0.0f, tint);
         }
 
+        void DrawSpriteSizeRot(SpriteID sprite, const Vector2& position, float scale, float rotation = 0.0f) {
+            Vector2 size = Vector2Scale({ sprites[sprite].spriteRect.width, sprites[sprite].spriteRect.height }, scale);
+            DrawTexturePro(GetAtlas(), GetSource(sprite), Rectangle { position.x, position.y, size.x, size.y }, GetOffset(sprite) * scale, rotation, WHITE);
+        }
+
         void Unload() {
             UnloadTexture(atlas);
             UnloadTexture(world);
+            UnloadTexture(backgroundUI);
             UnloadImage(icon);
             UnloadFont(font);
         }
@@ -246,7 +253,12 @@ namespace Sprites {
         }
 
         void SpriteInfo(SpriteID sprite) {
-            TraceLog(LOG_INFO, "Sprite: %s\n\t\tSource: %s\n\t\tDest: %s\n\t\tOffset: %s", std::to_string(sprite).c_str(), RectToString(GetSource(sprite)).c_str(), RectToString(GetDest(sprite, {0})).c_str(), VectorToString(GetOffset(sprite)).c_str());
+            TraceLog(LOG_INFO, "Sprite: %s\n\t\tSource: %s\n\t\tDest: %s\n\t\tOffset: %s", 
+                std::to_string(sprite).c_str(), 
+                RectToString(GetSource(sprite)).c_str(), 
+                RectToString(GetDest(sprite, {0})).c_str(), 
+                VectorToString(GetOffset(sprite)).c_str()
+            );
         }
 
         inline NPatchInfo& Normal() {

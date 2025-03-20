@@ -119,23 +119,47 @@ State Game::Update(float dt) {
         damageNumberManager.Update(dt);
         damageNumberManager.Render(renderData);
         EndMode2D();
-        /*DrawText(TextFormat("Screen rect: %s", Sprites::RenderData::RectToString(screenRect).c_str()), 10, 100, 10, WHITE);*/
         GameUI(dt);
         if (player.GetHealth().IsDead() || IsKeyPressed(KEY_Q)) {
             fader.StartFade(false);
+            ShowCursor();
             nextState = Menu;
         }
     } else {
         SetMouseCursor(MOUSE_CURSOR_ARROW);
-        if (Button(Vector2{screenSize.x * 0.5f, screenSize.y * 0.5f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "Play", renderData)) {
+        DrawTexturePro(renderData->UIBackground(), { 0, 0, (float) renderData->UIBackground().width, (float) renderData->UIBackground().height}, { 0, 0, screenSize.x, screenSize.y }, { 0 }, 0.0f, WHITE);
+        DrawTextCentred("Familiar Aquisition", Vector2 { screenSize.x * 0.5f, screenSize.y * 0.15f }, renderData, 48, WHITE);
+        Vector2 logoPos = Vector2 { screenSize.x * 0.5f, screenSize.y * 0.4f };
+        Vector2 mousePos = GetMousePosition();
+        renderData->DrawSpriteSize(Sprites::Logo, logoPos, 4);
+        Vector2 icePos = { 0.41f, 0.454f }, firePos = { 0.58f, 0.34f};
+        renderData->DrawSpriteSizeRot(Sprites::FireProjectile0, screenSize * firePos, 4.0f, 85.0f);
+        renderData->DrawSpriteSizeRot(Sprites::WaterProjectile0, screenSize * icePos, 4.0f, -85.0f);
+        if (Button(Vector2{screenSize.x * 0.5f, screenSize.y * 0.6f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "Play", renderData)) {
             TraceLog(LOG_INFO, "Started transition to game");
             nextState = InGame;
+            HideCursor();
             fader.StartFade(false);
         }
-        if (Button(Vector2{screenSize.x * 0.5f, screenSize.y * 0.5f + 1.5f * screenSize.x * 0.025f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "Quit", renderData)) {
+        if (Button(Vector2{screenSize.x * 0.5f, screenSize.y * 0.6f + 6.0f * screenSize.x * 0.025f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "Quit", renderData)) {
             TraceLog(LOG_INFO, "Started transition to game");
             nextState = Quit;
+            ShowCursor();
             fader.StartFade(false);
+        }
+        const float pad = 8;
+        bool doUpdate = false;
+        if (DrawSlider(Vector2{screenSize.x * 0.5f, screenSize.y * 0.6f + 1.5f * screenSize.x * 0.025f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "Global Volume", pad, renderData, &soundManager->globalVolume)) {
+            doUpdate = true;
+        }
+        if (DrawSlider(Vector2{screenSize.x * 0.5f, screenSize.y * 0.6f + 3.0f * screenSize.x * 0.025f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "BGM Volume",    pad, renderData, &soundManager->bgmVolume)) {
+            doUpdate = true;
+        }
+        if (DrawSlider(Vector2{screenSize.x * 0.5f, screenSize.y * 0.6f + 4.5f * screenSize.x * 0.025f}, Vector2{screenSize.x * 0.25f, screenSize.x * 0.025f}, "SFX Volume",    pad, renderData, &soundManager->sfxVolume)) {
+            doUpdate = true;
+        }
+        if (doUpdate) {
+            soundManager->UpdateVolume();
         }
     }
     // Sound

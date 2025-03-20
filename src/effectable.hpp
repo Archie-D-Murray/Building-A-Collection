@@ -17,6 +17,7 @@ public:
     float durationTimer = 0.0f;
     float duration = 1.0f;
     bool hasAnimation;
+    int damageCount = 0;
     Animation animation;
 
     static Effect CreateSlow(float magnitude, float duration, Animation animation = Idle);

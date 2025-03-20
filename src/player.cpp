@@ -30,6 +30,7 @@ void Player::Init(Game* game) {
 }
 
 void Player::Update(Game* game, float dt) {
+    health.Update(dt);
     familiarRotation += dt * PI;
     if (familiarRotation >= 2 * PI) {
         familiarRotation -= 2 * PI;
@@ -86,7 +87,7 @@ void Player::Update(Game* game, float dt) {
 }
 
 void Player::Render(Sprites::RenderData* data) {
-    data->DrawSprite(animator.GetSprite(), position, 0.0f, vulnerable ? WHITE : BLUE);
+    data->DrawSprite(animator.GetSprite(), position, 0.0f, vulnerable ? health.DamageTint() : BLUE);
     effectable.Render(data, position);
 }
 

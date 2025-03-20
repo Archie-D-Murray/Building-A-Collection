@@ -28,10 +28,10 @@ int main(int argc, char* argv[]) {
     bool capFPS = CapFPS(argc, argv);
     InitWindow(0, 0, "Making a Collection");
     InitAudioDevice();
-    Sprites::RenderData data = Sprites::RenderData("./assets/sprites/atlas.png", "./assets/font/Alagard.ttf", "./assets/sprites/world_mask.png", "./assets/sprites/icon.png");
+    Sprites::RenderData data = Sprites::RenderData("./assets/sprites/atlas.png", "./assets/font/Alagard.ttf", "./assets/sprites/world_mask.png", "./assets/sprites/ui_background.png", "./assets/sprites/icon.png");
     GameConfig config = CreateConfig();
     Vector2 screenSize = SetWindowDefaults(capFPS);
-    SoundManager soundManager = SoundManager(config.soundSettings.sfxFiles, config.soundSettings.bgmFiles);
+    SoundManager soundManager = SoundManager(config.soundSettings.sfxFiles, config.soundSettings.bgmFiles, &config);
     std::vector<Game> sceneStack;
     sceneStack.push_back(Game(Menu, screenSize, &data, &config, &soundManager));
     sceneStack.back().Init();

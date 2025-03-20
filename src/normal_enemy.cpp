@@ -22,6 +22,7 @@ void NormalEnemy::Init(Game* game) {
 }
 
 void NormalEnemy::Update(float dt, Game* game) {
+    health.Update(dt);
     effectable.Update(game, position, dt);
     if (effectable.stunned) {
         return;
@@ -35,7 +36,7 @@ void NormalEnemy::Update(float dt, Game* game) {
 }
 
 void NormalEnemy::Render(Sprites::RenderData* data) {
-    data->DrawSprite(animator.GetSprite(), position);
+    data->DrawSprite(animator.GetSprite(), position, 0.0f, health.DamageTint());
     effectable.Render(data, position);
 }
 

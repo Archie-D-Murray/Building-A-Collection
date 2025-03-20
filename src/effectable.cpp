@@ -100,6 +100,7 @@ void Effectable::Update(Game* game, Vector2 position, float dt) {
         if (effect->tickTimer >= effect->tickRate) {
             health->Damage(game, effect->magnitude, position);
             effect->tickTimer -= effect->tickRate;
+            effect->damageCount++;
         }
         if (effect->durationTimer >= effect->duration) {
             effects[DamageOverTime][i] = effects[DamageOverTime].back();
