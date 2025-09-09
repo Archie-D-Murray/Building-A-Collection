@@ -54,11 +54,13 @@ void Familiar::AdvanceTier() {
             tier = Epic;
             break;
         default:
+            TraceLog(LOG_INFO, "Could not find tier up case for tier: %d", tier);
             break;
     }
 }
 
 void Familiar::DropTier() {
+    if (tier == Common) { return; }
     switch (tier) {
         case Uncommon:
             tier = Common;
@@ -70,6 +72,7 @@ void Familiar::DropTier() {
             tier = Rare;
             break;
         default:
+            TraceLog(LOG_INFO, "Could not find drop case for tier: %d", tier);
             break;
     }
 }

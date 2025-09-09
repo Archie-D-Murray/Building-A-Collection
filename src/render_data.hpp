@@ -81,6 +81,7 @@ namespace Sprites {
         Texture2D world;
         Texture2D backgroundUI;
         Image icon;
+        Shader backgroundShader;
         Font font;
         NPatchInfo normal;
         NPatchInfo pressed;
@@ -155,16 +156,17 @@ namespace Sprites {
             ENUM_INDEX(Logo)                   CreateSprite({  0 * SPRITE_SIZE, 13 * SPRITE_SIZE, 12 * SPRITE_SIZE, 4 * SPRITE_SIZE}, { 6 * SPRITE_SIZE, 2 * SPRITE_SIZE }),
     };
     public:
-        RenderData(const char* atlasFileName, const char* fontFileName, const char* worldFileName, const char* backgroundUIFileName, const char* iconFileName) {
+        RenderData(const char* atlasFileName, const char* fontFileName, const char* worldFileName, const char* backgroundUIFileName, const char* iconFileName, const char* backgroundShaderFileName) {
             atlas =        LoadTexture(atlasFileName);
             world =        LoadTexture(worldFileName);
             backgroundUI = LoadTexture(backgroundUIFileName);
             icon  =        LoadImage(iconFileName);
+            backgroundShader = LoadShader(nullptr, backgroundShaderFileName);
             SetWindowIcon(icon);
             SetTextureFilter(atlas, TEXTURE_FILTER_POINT);
             SetTextureFilter(world, TEXTURE_FILTER_POINT);
             font = LoadFont(fontFileName);
-            normal = {
+            normal = NPatchInfo {
                 .source = { 0, 4 * SPRITE_SIZE, 6 * SPRITE_SIZE, 6 * SPRITE_SIZE },
                 .left = 10,
                 .top = 10,
@@ -195,6 +197,10 @@ namespace Sprites {
 
         inline Texture2D& UIBackground() {
             return backgroundUI;
+        }
+
+        inline Shader& BackgroundShader() {
+            return backgroundShader;
         }
 
         inline Font& GetFont() {

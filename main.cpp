@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "src/game.hpp"
+#include "src/particles.hpp"
 #include "src/render_data.hpp"
 #include <string.h>
 
@@ -28,12 +29,13 @@ int main(int argc, char* argv[]) {
     bool capFPS = CapFPS(argc, argv);
     InitWindow(0, 0, "Making a Collection");
     InitAudioDevice();
-    Sprites::RenderData data = Sprites::RenderData("./assets/sprites/atlas.png", "./assets/font/Alagard.ttf", "./assets/sprites/world_mask.png", "./assets/sprites/ui_background.png", "./assets/sprites/icon.png");
+    Sprites::RenderData data = Sprites::RenderData("./assets/sprites/atlas.png", "./assets/font/Alagard.ttf", "./assets/sprites/world_mask.png", "./assets/sprites/ui_background.png", "./assets/sprites/icon.png", "./shaders/game_world_fs.glsl");
     GameConfig config = CreateConfig();
     Vector2 screenSize = SetWindowDefaults(capFPS);
     SoundManager soundManager = SoundManager(config.soundSettings.sfxFiles, config.soundSettings.bgmFiles, &config);
+    AbyssParticles particles = AbyssParticles(0.05f * DEG2RAD, data.World().width * 0.5f, screenSize * 0.5f);
     std::vector<Game> sceneStack;
-    sceneStack.push_back(Game(Menu, screenSize, &data, &config, &soundManager));
+    sceneStack.push_back(Game(Menu, screenSize, &data, &config, &soundManager, &particles));
     sceneStack.back().Init();
 
     bool running = true;
@@ -48,7 +50,7 @@ int main(int argc, char* argv[]) {
                 TraceLog(LOG_INFO, "Switching scene");
                 sceneStack.back().Shutdown();
                 sceneStack.pop_back();
-                sceneStack.push_back(Game(newState, screenSize, &data, &config, &soundManager));
+                sceneStack.push_back(Game(newState, screenSize, &data, &config, &soundManager, &particles));
                 sceneStack.back().Init();
             } else {
                 running = false;

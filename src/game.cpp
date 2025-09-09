@@ -4,13 +4,15 @@
 #include "gui.hpp"
 #include "heavy_enemy.hpp"
 #include "normal_enemy.hpp"
+#include "particles.hpp"
 #include "player.hpp"
 #include "projectile.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include "render_data.hpp"
+#include "utilities.hpp"
 
-Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data, GameConfig* config, SoundManager* soundManager) : 
+Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data, GameConfig* config, SoundManager* soundManager, AbyssParticles* particles) : 
     renderData(data), 
     state(state), 
     config(config), 
@@ -19,13 +21,17 @@ Game::Game(State state, Vector2 screenSize, Sprites::RenderData* data, GameConfi
     zoom(4.0f * screenSize.y / 1080.0f),
     worldRadius(data->World().width * 0.5f),
     soundManager(soundManager),
-    player(this) 
+    player(this),
+    abyssParticles(particles)
 {
     if (state == InGame) {
         player = Player(this);
         Rectangle spawnArea = {0, 0, screenSize.x / zoom, screenSize.y / zoom};
         familiarSpawner = Spawner(screenSize * 0.5f, worldRadius * 0.2f, worldRadius * 0.9f, 10.0f, Game::SpawnRandomFamiliar);
         enemySpawner = Spawner(screenSize * 0.5f, spawnArea, 2.5f, Game::SpawnRandomEnemy);
+        screenRect = RectangleV(screenSize * 0.5f, screenSize / zoom);
+    } else {
+        screenRect = RectangleV(Vector2Zeros, screenSize);
     }
     fader.StartFade(true);
 }
@@ -50,11 +56,28 @@ void Game::GameUI(float dt) {
     DrawRectangleRec(bar, red);
     renderData->DrawSpriteSize(Sprites::HealthBarOverlay, screenSize * healthBarScale, scale);
     soundManager->DrawUI();
-    /*DrawText(TextFormat("Player pos: [ %.0f, %.0f ], dash timer: %d", player.position.x, player.position.y, player.IsVulnerable() * RAD2DEG), 10, 35, 14, WHITE);*/
+    // DrawText(TextFormat("Player pos: [ %.0f, %.0f ]", player.position.x, player.position.y), 10, 35, 14, WHITE);
 }
 
-void Game::GameBackground() {
+void Game::GameBackground(const Camera2D& camera) {
+    float time = GetTime();
+    Color white = WHITE;
+    Vector2 worldCentre = GetWorldToScreen2D(screenSize * 0.5f, camera);
+    float cutoff = worldRadius * zoom;
+    worldCentre.y = screenSize.y - worldCentre.y;
+    static bool debug = true;
+    if (debug && time > 5) {
+        debug = false;
+        TraceLog(LOG_INFO, "Screen world centre: %s", Sprites::RenderData::VectorToString(worldCentre).c_str());
+    }
+    SetShaderValue(renderData->BackgroundShader(), GetShaderLocation(renderData->BackgroundShader(), "worldDistance"), (void*) &cutoff, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(renderData->BackgroundShader(), GetShaderLocation(renderData->BackgroundShader(), "time"), (void*) &time, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(renderData->BackgroundShader(), GetShaderLocation(renderData->BackgroundShader(), "worldCentre"), &worldCentre, SHADER_UNIFORM_VEC2);
+    // BeginShaderMode(renderData->BackgroundShader());
     DrawTextureV(renderData->World(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
+    // EndShaderMode();
+    Vector2 viewSize = GetScreenToWorld2D(screenSize, camera) - GetScreenToWorld2D(Vector2Zeros, camera);
+    abyssParticles->Update(RectangleV(GetScreenToWorld2D(screenSize * 0.5f, camera) - (viewSize * 0.5f), viewSize), screenSize * 0.5f, worldRadius);
 };
 
 Vector2 ClosestPointOnRectangle(Vector2 point, Rectangle rect, float padding) {
@@ -67,9 +90,9 @@ Vector2 ClosestPointOnRectangle(Vector2 point, Rectangle rect, float padding) {
 State Game::Update(float dt) {
     if (state == InGame) {
         Camera2D camera = { .offset = screenSize * 0.5f, .target = player.position, .zoom = zoom };
-        Rectangle screenRect = { camera.target.x - screenSize.x / (2.0f * zoom), camera.target.y - screenSize.y / (2.0f * zoom), screenSize.x / zoom, screenSize.y / zoom };
+        screenRect = CameraView(camera, screenSize);
         BeginMode2D(camera);
-        GameBackground();
+        GameBackground(camera);
         player.Update(this, dt);
         for (size_t i = 0; i < familiarEggs.size();) {
             if (CheckCollisionCircles(player.position, player.collisionRadius, familiarEggs[i].position, familiarEggs[i].collisionRadius)) {
@@ -118,6 +141,8 @@ State Game::Update(float dt) {
         player.Render(renderData);
         damageNumberManager.Update(dt);
         damageNumberManager.Render(renderData);
+        abyssParticles->Render(GetTime());
+        abyssParticles->Debug(this, GetTime(), 0.0f);
         EndMode2D();
         GameUI(dt);
         if (player.GetHealth().IsDead() || IsKeyPressed(KEY_Q)) {
@@ -184,7 +209,12 @@ void Game::UpdateVisualEffects(float dt) {
     }
 }
 
-void Game::Shutdown() {}
+Rectangle Game::GetScreenRect() {
+    return screenRect;
+}
+
+void Game::Shutdown() {
+}
 
 void Game::ProcessProjectiles(float dt) {
     for (size_t i = 0; i < enemyProjectiles.size();) {

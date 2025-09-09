@@ -75,12 +75,14 @@ void Player::Update(Game* game, float dt) {
         float angle = Vector2Angle(Vector2 { 0, 1 }, position - game->screenSize * 0.5f);
         position = game->screenSize * 0.5f + Vector2Rotate({ 0, game->worldRadius - collisionRadius }, angle);
         // Cancel dash on wall hit
-        dashTimer = 0.0f;
+        if (dashTimer > 0) {
+            TraceLog(LOG_INFO, "Dash cancelled");
+            dashTimer = 0.0f;
+        }
         if (!vulnerable) {
             TraceLog(LOG_INFO, "Set vulnerable to true in velocity handle");
         }
         vulnerable = true;
-        TraceLog(LOG_INFO, "Dash cancelled");
     } else {
         position += velocity;
     }

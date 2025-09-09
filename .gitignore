@@ -1,4 +1,7 @@
 .vscode/
+build/
+*.o
+*.old
 raylib-5.5/
 *.exe
 *.ilk
