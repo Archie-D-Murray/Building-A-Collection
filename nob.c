@@ -27,38 +27,40 @@ bool dir_exists(const char* dir) {
 }
 
 void get_raylib() {
-    if (!dir_exists("./raylib-5.5/")) {
-        Cmd download = { 0 };
-        Cmd unzip = { 0 };
-        Cmd move = { 0 };
+    Cmd download = { 0 };
+    Cmd unzip = { 0 };
+    Cmd move = { 0 };
 
-        cmd_append(&download, "curl");
-        if (is_windows) {
-            cmd_append(&unzip, "tar");
-            cmd_append(&download, "-o", "raylib-5.5.zip");
-            cmd_append(&download, "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_win64_msvc16.zip");
-            cmd_append(&unzip, "-xf", "raylib-5.5.zip");
-            cmd_append(&move, "ren", "raylib-5.5_win64_msvc16", "raylib-5.5");
-        } else {
-            cmd_append(&download, "-o", "raylib-5.5.tar.gz");
-            cmd_append(&download, "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_linux_amd64.tar.gz");
-            cmd_append(&unzip, "-xzf", "raylib-5.5.tar.gz");
-            cmd_append(&move, "mv", "raylib-5.5_linux_amd64", "raylib-5.5");
-        }
-        if (!cmd_run_sync(download)) nob_log(ERROR, "Download failed..."); return;
-        if (!cmd_run_sync(unzip))    nob_log(ERROR, "Unzip failed...");    return;
-        if (!cmd_run_sync(move))     nob_log(ERROR, "Move failed...");     return;
+    cmd_append(&download, "curl");
 
-        cmd_free(download);
-        cmd_free(unzip);
-        cmd_free(move);
+    if (is_windows) {
+        cmd_append(&unzip, "tar");
+        cmd_append(&download, "-o", "raylib-5.5.zip");
+        cmd_append(&download, "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_win64_msvc16.zip");
+        cmd_append(&unzip, "-xf", "raylib-5.5.zip");
+        cmd_append(&move, "ren", "raylib-5.5_win64_msvc16", "raylib-5.5");
+    } else {
+        cmd_append(&download, "-o", "raylib-5.5.tar.gz");
+        cmd_append(&download, "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_linux_amd64.tar.gz");
+        cmd_append(&unzip, "-xzf", "raylib-5.5.tar.gz");
+        cmd_append(&move, "mv", "raylib-5.5_linux_amd64", "raylib-5.5");
     }
+
+    if (!cmd_run_sync(download)) { nob_log(ERROR, "Download failed..."); return; }
+    if (!cmd_run_sync(unzip))    { nob_log(ERROR, "Unzip failed...");    return; }
+    if (!cmd_run_sync(move))     { nob_log(ERROR, "Move failed...");     return; }
+
+    cmd_free(download);
+    cmd_free(unzip);
+    cmd_free(move);
 }
 
 int main(int argc, char** argv) {
     NOB_GO_REBUILD_URSELF(argc, argv);
 
-    get_raylib();
+    if (!dir_exists("./raylib-5.5/")) {
+        get_raylib();
+    }
 
     const char* build = "build/";
     const char* exe = is_windows ? "Building-a-Collection.exe" : "Building-a-Collection";
