@@ -1,11 +1,12 @@
 #define NOB_IMPLEMENTATION
 #define NOB_STRIP_PREFIX
 #include "nob.h"
+#include <sys/stat.h>
 
 #ifdef WIN32
 bool is_windows = true;
 #else
-bool sWindows = false;
+bool is_windows = false;
 #endif
 
 void append_all(Nob_Cmd* cmd, const char** args, size_t count) {
@@ -20,11 +21,47 @@ void pop_many(Nob_Cmd* cmd, size_t count) {
     }
 }
 
+bool dir_exists(const char* dir) {
+    struct stat s;
+    return stat(dir, &s) == 0 && (S_IFDIR & s.st_mode);
+}
+
+void get_raylib() {
+    if (!dir_exists("./raylib-5.5/")) {
+        Cmd download = { 0 };
+        Cmd unzip = { 0 };
+        Cmd move = { 0 };
+
+        cmd_append(&download, "curl");
+        if (is_windows) {
+            cmd_append(&unzip, "tar");
+            cmd_append(&download, "-o", "raylib-5.5.zip");
+            cmd_append(&download, "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_win64_msvc16.zip");
+            cmd_append(&unzip, "-xf", "raylib-5.5.zip");
+            cmd_append(&move, "ren", "raylib-5.5_win64_msvc16", "raylib-5.5");
+        } else {
+            cmd_append(&download, "-o", "raylib-5.5.tar.gz");
+            cmd_append(&download, "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_linux_amd64.tar.gz");
+            cmd_append(&unzip, "-xzf", "raylib-5.5.tar.gz");
+            cmd_append(&move, "mv", "raylib-5.5_linux_amd64", "raylib-5.5");
+        }
+        if (!cmd_run_sync(download)) nob_log(ERROR, "Download failed..."); return;
+        if (!cmd_run_sync(unzip))    nob_log(ERROR, "Unzip failed...");    return;
+        if (!cmd_run_sync(move))     nob_log(ERROR, "Move failed...");     return;
+
+        cmd_free(download);
+        cmd_free(unzip);
+        cmd_free(move);
+    }
+}
+
 int main(int argc, char** argv) {
     NOB_GO_REBUILD_URSELF(argc, argv);
 
+    get_raylib();
+
     const char* build = "build/";
-    const char* exe = is_windows ? "main.exe" : "main";
+    const char* exe = is_windows ? "Building-a-Collection.exe" : "Building-a-Collection";
     const char* raylib = is_windows ? "./raylib-5.5/lib/raylib.lib" : "./raylib-5.5/lib/libraylib.a";
     const char* windows_libs[] = {
         "-lmsvcrt",
@@ -40,7 +77,7 @@ int main(int argc, char** argv) {
     };
     const char* raylib_include = "-I./raylib-5.5/include/";
     const char* os_flags = is_windows ? "-nostdlib" : "";
-    const char* flags[] = { "-g", "-O0" };
+    const char* flags[] = { "-g", "-O0", "-std=c++20" };
 
     if (!nob_mkdir_if_not_exists(build)) {
         nob_log(NOB_ERROR, "Could not create build directory...");

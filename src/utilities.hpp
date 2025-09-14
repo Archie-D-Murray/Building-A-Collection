@@ -1,7 +1,12 @@
 #pragma once
 #include "raylib.h"
+#include <vector>
+
+template<typename T> void remove_swap_back(std::vector<T>* vector, size_t idx);
 
 Rectangle RectangleV(const Vector2& position, const Vector2& size);
+
+Rectangle RectangleVCentred(const Vector2& position, const Vector2& size);
 
 Rectangle CameraView(const Camera2D& camera, const Vector2& screenSize);
 

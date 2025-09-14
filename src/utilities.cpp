@@ -3,8 +3,17 @@
 #include "raymath.h"
 #include <cmath>
 
+template<typename T> void remove_swap_back(std::vector<T>* vector, size_t idx) {
+    vector->at(idx) = vector->back();
+    vector->pop_back();
+}
+
 Rectangle RectangleV(const Vector2& position, const Vector2& size) {
     return Rectangle { position.x, position.y, size.x, size.y };
+};
+
+Rectangle RectangleVCentred(const Vector2& position, const Vector2& size) {
+    return Rectangle { position.x - size.x * 0.5f, position.y - size.y * 1.5f, size.x, size.y };
 };
 
 Rectangle CameraView(const Camera2D& camera, const Vector2& screenSize) {
