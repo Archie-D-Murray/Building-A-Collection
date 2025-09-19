@@ -29,3 +29,7 @@ float MoveTowardsAngle(float current, float target, float maxDelta);
 float MoveTowards(float current, float target, float maxDelta);
 
 bool PointInRectangle(const Vector2& point, const Rectangle& rectangle);
+
+float Round(float value, float step);
+
+Vector2 RoundV(Vector2 position, float step);

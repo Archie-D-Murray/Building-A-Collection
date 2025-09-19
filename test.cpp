@@ -4,14 +4,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#ifndef RAD2DEG
-#define RAD2DEG (180.0f / (float)M_PI)
-#endif
-
-#ifndef DEG2RAD
-#define DEG2RAD ((float)M_PI / 180.0f)
-#endif
-
 void TestClamp() {
     printf("Testing Clamp...\n");
     printf("Clamp(5, 0, 10) = %.2f (expected 5.00)\n", Clamp(5, 0, 10));
@@ -39,7 +31,6 @@ void TestDeltaAngle() {
 }
 
 void TestMoveTowardsAngle() {
-
     float current = 155.0f * DEG2RAD;
     float target = -155.0f * DEG2RAD;
     float step = 5.0f * DEG2RAD;
@@ -54,9 +45,15 @@ void TestMoveTowardsAngle() {
     }
 }
 
+void TestRound() {
+    float size = 4;
+    float limit = size * 3;
+    for (float i = -limit; i <= limit; i ++) {
+        printf("Rounding %.1f to nearest %.1f: %.1f\n", i, size, Round(i, size));
+    }
+}
+
 int main(void) {
-    TestClamp();
-    TestDeltaAngle();
-    TestMoveTowardsAngle();
+    TestRound();
     return 0;
 }

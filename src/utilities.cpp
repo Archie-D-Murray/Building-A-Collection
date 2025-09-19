@@ -21,7 +21,7 @@ Rectangle CameraView(const Camera2D& camera, const Vector2& screenSize) {
     return RectangleV(topLeft, GetScreenToWorld2D(screenSize, camera) - topLeft);
 }
 
-Vector2 TopLeft(const Rectangle &rect) {
+Vector2 TopLeft(const Rectangle& rect) {
     return Vector2 { rect.x, rect.y };
 }
 
@@ -29,7 +29,7 @@ Vector2 CentrePos(const Rectangle& rect) {
     return Vector2 { rect.x + rect.width * 0.5f, rect.y + rect.height * 0.5f };
 };
 
-Vector2 RectangleSize(const Rectangle &rect) {
+Vector2 RectangleSize(const Rectangle& rect) {
     return Vector2 { rect.width, rect.height };
 }
 
@@ -85,6 +85,14 @@ float MoveTowards(float current, float target, float maxDelta) {
     return current + copysignf(maxDelta, target - current);
 };
 
-bool PointInRectangle(const Vector2 &point, const Rectangle &rectangle) {
+bool PointInRectangle(const Vector2& point, const Rectangle& rectangle) {
     return (point.x >= rectangle.x) && (point.x <= (rectangle.x + rectangle.width)) && (point.y >= rectangle.y) && (point.y <= (rectangle.y + rectangle.height));
+}
+
+Vector2 RoundV(Vector2 position, float step) {
+    return Vector2 { Round(position.x, step), Round(position.y, step) };
+}
+
+float Round(float value, float step) {
+    return ((int) value / (int) step + (value < 0 && !FloatEquals(fmodf(value, step), 0.0f) ? -1 : 0)) * step; // NOLINT
 }

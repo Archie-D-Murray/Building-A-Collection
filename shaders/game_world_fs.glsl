@@ -40,7 +40,7 @@ float random(vec2 position) {
 }
 
 float pixelate(float value, float pixelSize) {
-    return float(int(value * pixelSize) / int(pixelSize));
+    return floor(value / pixelSize) * pixelSize;
 }
 
 float getStart(float value, float increment) {

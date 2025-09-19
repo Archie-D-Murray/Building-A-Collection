@@ -68,12 +68,13 @@ namespace Sprites {
         DashParticle2,
         FamiliarOutline,
         FamiliarEggIndicator,
+        Tile,
         HealthBarOverlay,
         HealthBarBackground,
         Logo,
         Count 
     };
-    const static float SPRITE_SIZE = 16.0f;
+    const float SPRITE_SIZE = 16.0f;
 
     class RenderData {
     private:
@@ -146,6 +147,12 @@ namespace Sprites {
             ENUM_INDEX(DashParticle2)          CreateSprite({ 11 * SPRITE_SIZE, 12 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
             ENUM_INDEX(FamiliarOutline)        CreateSprite({ 10 * SPRITE_SIZE, 10 * SPRITE_SIZE, 2 * SPRITE_SIZE, 2 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
             ENUM_INDEX(FamiliarEggIndicator)   CreateSprite({  0 * SPRITE_SIZE, 11 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { 8, 8 }),
+
+            //--------------------------------------------------------------------------------------------------------------------------\\
+            // Background                                                                                                               \\
+            //--------------------------------------------------------------------------------------------------------------------------\\
+
+            ENUM_INDEX(Tile)                   CreateSprite({  0 * SPRITE_SIZE, 10 * SPRITE_SIZE, 1 * SPRITE_SIZE, 1 * SPRITE_SIZE}, { SPRITE_SIZE, SPRITE_SIZE }),
 
             //--------------------------------------------------------------------------------------------------------------------------\\
             // UI                                                                                                                       \\

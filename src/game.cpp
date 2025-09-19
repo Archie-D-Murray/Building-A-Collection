@@ -63,20 +63,24 @@ void Game::GameBackground(const Camera2D& camera) {
     float time = GetTime();
     Color white = WHITE;
     Vector2 worldCentre = GetWorldToScreen2D(screenSize * 0.5f, camera);
+    Vector2 viewSize = GetScreenToWorld2D(screenSize, camera) - GetScreenToWorld2D(Vector2Zeros, camera);
     float cutoff = worldRadius * zoom;
     worldCentre.y = screenSize.y - worldCentre.y;
-    static bool debug = true;
-    if (debug && time > 5) {
-        debug = false;
-        TraceLog(LOG_INFO, "Screen world centre: %s", Sprites::RenderData::VectorToString(worldCentre).c_str());
-    }
     SetShaderValue(renderData->BackgroundShader(), GetShaderLocation(renderData->BackgroundShader(), "worldDistance"), (void*) &cutoff, SHADER_UNIFORM_FLOAT);
     SetShaderValue(renderData->BackgroundShader(), GetShaderLocation(renderData->BackgroundShader(), "time"), (void*) &time, SHADER_UNIFORM_FLOAT);
     SetShaderValue(renderData->BackgroundShader(), GetShaderLocation(renderData->BackgroundShader(), "worldCentre"), &worldCentre, SHADER_UNIFORM_VEC2);
-    // BeginShaderMode(renderData->BackgroundShader());
-    DrawTextureV(renderData->World(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
-    // EndShaderMode();
-    Vector2 viewSize = GetScreenToWorld2D(screenSize, camera) - GetScreenToWorld2D(Vector2Zeros, camera);
+    BeginShaderMode(renderData->BackgroundShader());
+    Vector2 startPos = RoundV(camera.target - viewSize * 0.5f, Sprites::SPRITE_SIZE);
+    Vector2 worldTiles = viewSize / (Vector2Ones * Sprites::SPRITE_SIZE);
+    int xEnd = static_cast<int>(roundf(worldTiles.x)) + 2;
+    int yEnd = static_cast<int>(roundf(worldTiles.y)) + 2;
+    for (float x = 0; x < xEnd; x++) {
+        for (float y = 0; y < yEnd; y++) {
+            renderData->DrawSprite(Sprites::Tile, startPos + Vector2 { x, y } * Sprites::SPRITE_SIZE);
+        }
+    }
+    // DrawTextureV(renderData->World(), screenSize * 0.5f - Vector2 { worldRadius, worldRadius }, WHITE);
+    EndShaderMode();
     abyssParticles->Update(RectangleV(GetScreenToWorld2D(screenSize * 0.5f, camera) - (viewSize * 0.5f), viewSize), screenSize * 0.5f, worldRadius);
 };
 
